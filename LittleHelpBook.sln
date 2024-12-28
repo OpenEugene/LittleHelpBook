@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oqtane.Server", "..\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj", "{3AB6FCC9-EFEB-4C0E-A2CF-8103914C5196}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEugene.Theme.LittleHelpBook.Client", "OpenEugene.Theme.LittleHelpBook\Client\OpenEugene.Theme.LittleHelpBook.Client.csproj", "{D57BABB4-EEB3-445A-9C5C-0A2128967781}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEugene.Theme.LittleHelpBook.Package", "OpenEugene.Theme.LittleHelpBook\Package\OpenEugene.Theme.LittleHelpBook.Package.csproj", "{43B02F39-B81C-421F-937B-0898F5E9F219}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEugene.Specs.LittleHelpBook", "OpenEugene.Specs.LittleHelpBook\OpenEugene.Specs.LittleHelpBook.csproj", "{AC724274-1641-423C-B827-9634ED201B5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +50,10 @@ Global
 		{43B02F39-B81C-421F-937B-0898F5E9F219}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43B02F39-B81C-421F-937B-0898F5E9F219}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43B02F39-B81C-421F-937B-0898F5E9F219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC724274-1641-423C-B827-9634ED201B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC724274-1641-423C-B827-9634ED201B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC724274-1641-423C-B827-9634ED201B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC724274-1641-423C-B827-9634ED201B5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
