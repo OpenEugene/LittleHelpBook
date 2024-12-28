@@ -20,15 +20,15 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Client\bin\Release\net8.0\OpenEugene.Module.LittleHelpBook.Client.Oqtane.dll" target="lib\net8.0" /> 
-    <file src="..\Client\bin\Release\net8.0\OpenEugene.Module.LittleHelpBook.Client.Oqtane.pdb" target="lib\net8.0" /> 
-    <file src="..\Server\bin\Release\net8.0\OpenEugene.Module.LittleHelpBook.Server.Oqtane.dll" target="lib\net8.0" /> 
-    <file src="..\Server\bin\Release\net8.0\OpenEugene.Module.LittleHelpBook.Server.Oqtane.pdb" target="lib\net8.0" /> 
-    <file src="..\Shared\bin\Release\net8.0\OpenEugene.Module.LittleHelpBook.Shared.Oqtane.dll" target="lib\net8.0" /> 
-    <file src="..\Shared\bin\Release\net8.0\OpenEugene.Module.LittleHelpBook.Shared.Oqtane.pdb" target="lib\net8.0" /> 
+    <file src="..\Client\bin\Release\net9.0\OpenEugene.Module.LittleHelpBook.Client.Oqtane.dll" target="lib\net9.0" /> 
+    <file src="..\Client\bin\Release\net9.0\OpenEugene.Module.LittleHelpBook.Client.Oqtane.pdb" target="lib\net9.0" /> 
+    <file src="..\Server\bin\Release\net9.0\OpenEugene.Module.LittleHelpBook.Server.Oqtane.dll" target="lib\net9.0" /> 
+    <file src="..\Server\bin\Release\net9.0\OpenEugene.Module.LittleHelpBook.Server.Oqtane.pdb" target="lib\net9.0" /> 
+    <file src="..\Shared\bin\Release\net9.0\OpenEugene.Module.LittleHelpBook.Shared.Oqtane.dll" target="lib\net9.0" /> 
+    <file src="..\Shared\bin\Release\net9.0\OpenEugene.Module.LittleHelpBook.Shared.Oqtane.pdb" target="lib\net9.0" /> 
     <file src="..\Server\wwwroot\**\*.*" target="wwwroot" /> 
     <file src="icon.png" target="" />
     <!--MudBlazor-->
-    <file src="..\Server\bin\Release\net8.0\MudBlazor.dll" target="lib\net8.0" />
+    <file src="..\Server\bin\Release\net9.0\MudBlazor.dll" target="lib\net9.0" />
   </files>
 </package>

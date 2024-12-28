@@ -20,11 +20,11 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="..\Client\bin\Release\net8.0\OpenEugene.Theme.LittleHelpBook.Client.Oqtane.dll" target="lib\net8.0" />
-		<file src="..\Client\bin\Release\net8.0\OpenEugene.Theme.LittleHelpBook.Client.Oqtane.pdb" target="lib\net8.0" />
+		<file src="..\Client\bin\Release\net9.0\OpenEugene.Theme.LittleHelpBook.Client.Oqtane.dll" target="lib\net9.0" />
+		<file src="..\Client\bin\Release\net9.0\OpenEugene.Theme.LittleHelpBook.Client.Oqtane.pdb" target="lib\net9.0" />
 		<file src="..\Client\wwwroot\**\*.*" target="wwwroot" />
 		<!--MudBlazor-->
-		<file src="..\Client\bin\Release\net8.0\MudBlazor.dll" target="lib\net8.0" />
+		<file src="..\Client\bin\Release\net9.0\MudBlazor.dll" target="lib\net9.0" />
 		<file src="icon.png" target="" />
 	</files>
 </package>
