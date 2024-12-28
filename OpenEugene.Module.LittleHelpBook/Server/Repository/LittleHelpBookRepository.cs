@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenEugene.Module.LittleHelpBook.Repository
 {
-    public class LittleHelpBookRepository : ITransientService
+    public partial class LittleHelpBookRepository : ITransientService
     {
         private readonly IDbContextFactory<LittleHelpBookContext> _factory;
 
