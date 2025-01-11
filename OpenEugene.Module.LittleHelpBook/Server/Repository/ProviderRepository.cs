@@ -15,7 +15,7 @@ namespace OpenEugene.Module.LittleHelpBook.Repository
         {
             using var db = _factory.CreateDbContext();
             var list = db.Provider.AsNoTracking();
-            return list;
+            return list.ToList();
         }
 
         public Provider GetProvider(int id)

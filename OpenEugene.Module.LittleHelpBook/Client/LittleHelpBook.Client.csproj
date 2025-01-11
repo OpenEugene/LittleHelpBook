@@ -22,7 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Shared\OpenEugene.Module.LittleHelpBook.Shared.csproj" />
+		<ProjectReference Include="..\Shared\LittleHelpBook.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

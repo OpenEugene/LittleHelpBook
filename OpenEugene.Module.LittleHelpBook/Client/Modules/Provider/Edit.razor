@@ -14,8 +14,8 @@
 @if (_model != null)
 {
     <EditForm @ref="form" Model="@_model"
-              OnValidSubmit="OnValidSubmit"
-              OnInvalidSubmit="OnInvalidSubmit">
+    OnValidSubmit="OnValidSubmit"
+    OnInvalidSubmit="OnInvalidSubmit">
         <MudCard>
             <MudCardHeader>
                 <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
@@ -97,8 +97,9 @@
 
     MudMessageBox Mbox { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
+       
         try
         {
             _id = int.Parse(PageState.QueryString["id"]);

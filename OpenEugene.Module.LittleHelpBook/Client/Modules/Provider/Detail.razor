@@ -75,7 +75,7 @@
 
     MudMessageBox Mbox { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
         try {
             _id = int.Parse(PageState.QueryString["id"]);

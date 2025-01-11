@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\OpenEugene.Module.LittleHelpBook.Client.csproj" />
-    <ProjectReference Include="..\Server\OpenEugene.Module.LittleHelpBook.Server.csproj" />
-    <ProjectReference Include="..\Shared\OpenEugene.Module.LittleHelpBook.Shared.csproj" />
+    <ProjectReference Include="..\Client\Theme.LittleHelpBook.Client.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

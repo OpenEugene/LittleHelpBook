@@ -6,7 +6,9 @@
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Index> Loc
 
-<MudDataGrid 
+@if (_list!=null && _list.Any())
+{
+    <MudDataGrid 
     Items="@_list" 
     T="M.Provider" 
     RowClick="@Selected"
@@ -18,25 +20,25 @@
         <MudSpacer />
         <MudIconButton Title="New" Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
         <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@MudBlazor.Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        AdornmentIcon="@MudBlazor.Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <Columns>
         <TemplateColumn >
             <CellTemplate>
-                 <AuthorizeView Roles="Editors" Context="auth" >
+                <AuthorizeView Roles="Editors" Context="auth" >
                     <Authorized>
                         <MudIconButton 
-                            Size="@Size.Small" 
-                            Icon="@MudBlazor.Icons.Material.Outlined.Edit" 
-                            OnClick="@(()=>Edit(context.Item))" />
+                        Size="@Size.Small" 
+                        Icon="@MudBlazor.Icons.Material.Outlined.Edit" 
+                        OnClick="@(()=>Edit(context.Item))" />
                     </Authorized>
                     <NotAuthorized>
                         <MudIconButton 
-                            Size="@Size.Small"
-                            Icon="@MudBlazor.Icons.Material.Filled.Preview"
-                            OnClick="@(()=>Detail(context.Item))" />
+                        Size="@Size.Small"
+                        Icon="@MudBlazor.Icons.Material.Filled.Preview"
+                        OnClick="@(()=>Detail(context.Item))" />
                     </NotAuthorized>
-                 </AuthorizeView>
+                </AuthorizeView>
             </CellTemplate>
         </TemplateColumn>
         <PropertyColumn Property="x => x.Name" Title="Name" />
@@ -49,15 +51,14 @@
         <MudDataGridPager T="M.Provider" />
     </PagerContent>
 </MudDataGrid>
+}
 
-    
 @code {
 
     List<M.Provider> _list;
     private string _searchString;
 
-
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
         try
         {

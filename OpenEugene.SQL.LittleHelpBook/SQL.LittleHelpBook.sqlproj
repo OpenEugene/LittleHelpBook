@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>OpenEugene.SQL.LittleHelpBook</Name>
+    <Name>SQL.LittleHelpBook</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{ebaf06e8-6b29-46b4-b7d7-1e2ba6d03ed0}</ProjectGuid>

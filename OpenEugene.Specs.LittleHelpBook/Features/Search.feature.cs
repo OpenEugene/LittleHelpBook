@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace OpenEugene.Specs.LittleHelpBook.Features
+namespace Specs.LittleHelpBook.Features
 {
     using Reqnroll;
     using System;
