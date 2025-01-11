@@ -1,2 +1,2 @@
-﻿CREATE USER [reader] FOR LOGIN [lhbreader];
+﻿-- CREATE USER [reader] FOR LOGIN [lhbreader];
 

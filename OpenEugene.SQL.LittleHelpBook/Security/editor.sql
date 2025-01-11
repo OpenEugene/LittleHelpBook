@@ -1,2 +1,2 @@
-﻿CREATE USER [editor] FOR LOGIN [lhbeditor];
+﻿-- CREATE USER [editor] FOR LOGIN [lhbeditor];
 
