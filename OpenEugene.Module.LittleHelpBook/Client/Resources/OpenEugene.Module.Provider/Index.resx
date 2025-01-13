@@ -121,7 +121,7 @@
     <value>Name</value>
   </data>
   <data name="Add.Text" xml:space="preserve">
-    <value>Add LittleHelpBook</value>
+    <value>Add Provider</value>
   </data>
   <data name="Edit.Text" xml:space="preserve">
     <value>Edit</value>
@@ -130,19 +130,19 @@
     <value>Delete</value>
   </data>
   <data name="Delete.Header" xml:space="preserve">
-    <value>Delete LittleHelpBook</value>
+    <value>Delete Provider</value>
   </data>
   <data name="Delete.Message" xml:space="preserve">
-    <value>Are You Sure You Wish To Delete This LittleHelpBook?</value>
+    <value>Are You Sure You Wish To Delete This Provider?</value>
   </data>
   <data name="Message.DisplayNone" xml:space="preserve">
-    <value>No LittleHelpBooks To Display</value>
+    <value>No Providers To Display</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
-    <value>Error Loading LittleHelpBook</value>
+    <value>Error Loading Providers</value>
   </data>
   <data name="Message.DeleteError" xml:space="preserve">
-    <value>Error Deleting LittleHelpBook</value>
+    <value>Error Deleting Provider</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Provider</value>
