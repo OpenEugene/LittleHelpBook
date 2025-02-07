@@ -12,8 +12,8 @@ using OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Repository;
 
 
-namespace OE.Module.LHB.Controllers
-{
+namespace OpenEugene.Module.LittleHelpBook.Controllers;
+
     [Route(ControllerRoutes.ApiRoute)]
     public class ProviderController : ModuleControllerBase
     {
@@ -198,4 +198,4 @@ namespace OE.Module.LHB.Controllers
             }
         }
     }
-}
+

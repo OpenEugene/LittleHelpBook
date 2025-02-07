@@ -11,8 +11,8 @@ using Oqtane.Models;
 using OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Repository;
 
-namespace OE.Module.LHB.Controllers
-{
+namespace OpenEugene.Module.LittleHelpBook.Controllers;
+
     [Route(ControllerRoutes.ApiRoute)]
     public class AddressController : ModuleControllerBase
     {
@@ -58,4 +58,4 @@ namespace OE.Module.LHB.Controllers
             }
         }
     }
-}
+

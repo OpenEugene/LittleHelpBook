@@ -44,7 +44,7 @@ public partial class Index : ModuleBase
         {
             var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-            _providerId = Int32.Parse(PageState.QueryString["id"]);
+            _providerId = Int32.Parse(PageState.QueryString["providerId"]);
             (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
             if (!IsSuccessStatusCode(code)) {
                 throw new HttpRequestException($"Error loading Phone Numbers. Code: {code}");

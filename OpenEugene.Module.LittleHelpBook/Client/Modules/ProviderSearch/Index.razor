@@ -1,0 +1,67 @@
+@namespace OpenEugene.Module.ProviderSearch
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs 
+<MudDialogProvider />*@
+
+@* Needed for snackbars 
+<MudSnackbarProvider />*@
+
+@if (_list == null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+    @if (_list.Any())
+    {
+        <MudDataGrid Items="@_list"
+                     T="M.Provider"
+                     RowClick="@Selected"
+                     SortMode="SortMode.Multiple"
+                     Filterable="true"
+                     QuickFilter="@_quickFilter">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
+                <MudSpacer />
+                <MudIconButton Title="New" Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@MudBlazor.Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                <TemplateColumn>
+                    <CellTemplate>
+                        <AuthorizeView Roles="Editors" Context="auth">
+                            <Authorized>
+                                <MudIconButton Size="@Size.Small"
+                                               Icon="@MudBlazor.Icons.Material.Outlined.Edit"
+                                               OnClick="@(()=>Edit(context.Item))" />
+                            </Authorized>
+                            <NotAuthorized>
+                                <MudIconButton Size="@Size.Small"
+                                               Icon="@MudBlazor.Icons.Material.Filled.Preview"
+                                               OnClick="@(()=>Detail(context.Item))" />
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.Name" Title="Name" />
+                <PropertyColumn Property="x => x.Description" />
+            </Columns>
+            <NoRecordsContent>
+                <MudText>@Localizer["Message.DisplayNone"]</MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudDataGridPager T="M.Provider" />
+            </PagerContent>
+        </MudDataGrid>
+    }
+    else
+    {
+        <MudPaper Class="pa-3"><ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add LittleHelpBook" ResourceKey="Add" /></MudPaper>
+        <p>@Localizer["Message.DisplayNone"]</p>
+    }
+}

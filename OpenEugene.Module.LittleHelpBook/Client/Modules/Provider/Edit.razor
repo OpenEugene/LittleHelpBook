@@ -37,16 +37,7 @@
                     <ProviderAttribute Attributes="@_model.ProviderAttributes" OnDelete="DeleteAttribute"> </ProviderAttribute>
                 }
             </MudField>
-            <MudField Label="Phone Number(s)" Variant="Variant.Outlined">
-                <MudButton Color="Color.Primary" OnClick="@(() => AddPhone())">@Localizer["Add Phone Number"]</MudButton>
-                @if (_orderedPhoneNumbers.Any())
-                {
-                    @foreach (var phone in _orderedPhoneNumbers)
-                    {
-                        <PhoneNumberEdit Phone="@phone" OnDelete="DeletePhoneNumber"></PhoneNumberEdit>
-                    }
-                }
-            </MudField>
+           
             <MudField Label="Address(es)" Variant="Variant.Outlined">
                 <MudButton Color="Color.Primary" OnClick="@(() => AddAddr())">@Localizer["Add Address"]</MudButton>
 
