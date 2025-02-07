@@ -10,7 +10,7 @@
 @* Needed for snackbars 
 <MudSnackbarProvider />*@
 
-@if (_LittleHelpBooks == null)
+@if (_list == null)
 {
 <p><em>Loading...</em></p>
 }
@@ -19,11 +19,11 @@ else
 <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add LittleHelpBook" ResourceKey="Add" />
 <br />
 <br />
-    @if (_LittleHelpBooks.Any())
+    @if (_list.Any())
     {
         <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-            <MudText Class="mb-4">Enter data for the LittleHelpBook module</MudText>
-            <MudTable Items="@_LittleHelpBooks">
+            <MudText Class="mb-4">Phone Numbers</MudText>
+            <MudTable Items="@_list">
                 <ColGroup>
                     <col style="width: 10px;" />
                     <col style="width: 10px;" />
@@ -32,12 +32,14 @@ else
                 <HeaderContent>
                     <MudTh>&nbsp;</MudTh>
                     <MudTh>&nbsp;</MudTh>
-                    <MudTh>@Localizer["Name"]</MudTh>
+                    <MudTh>@Localizer["Number"]</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd Class="pa-2"><ActionLink Action="Edit" Parameters="@($"id=" + context.LittleHelpBookId.ToString())" ResourceKey="Edit" /></MudTd>
-                    <MudTd Class="pa-2"><ActionDialog Header="Delete LittleHelpBook" Message="Are You Sure You Wish To Delete This LittleHelpBook?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" /></MudTd>
-                    <MudTd DataLabel="Nr">@context.Name</MudTd>
+                    <MudTd Class="pa-2"><ActionLink Action="Edit" Parameters="@($"id=" + context.PhoneNumberId.ToString())" ResourceKey="Edit" /></MudTd>
+                    <MudTd Class="pa-2"><ActionDialog Header="Delete Phone Number" Message="Are You Sure You Wish To Delete This Phone Number?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" /></MudTd>
+                    <MudTd DataLabel="Area">@context.AreaCode</MudTd>
+                    <MudTd DataLabel="Number">@context.Number</MudTd>
+                    <MudTd DataLabel="Description">@context.Description</MudTd>
                 </RowTemplate>
                 <PagerContent>
                     <MudPaper Outlined="true" Class="border-dashed">

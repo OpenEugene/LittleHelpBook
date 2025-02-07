@@ -37,6 +37,22 @@ public class PhoneNumberController : ModuleControllerBase
         }
     }
 
+    [HttpGet("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult<PhoneNumber>> Get(int id)
+    {
+        try
+        {
+            var data = _LittleHelpBookRepository.GetPhoneNumberByPhoneNumberId(id);
+            return Ok(data);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Read, "Failed Phone Number Get Attempt {id}", id);
+            return StatusCode(500);
+        }
+    }
+
 
     // POST api/<controller>
     [HttpPost]

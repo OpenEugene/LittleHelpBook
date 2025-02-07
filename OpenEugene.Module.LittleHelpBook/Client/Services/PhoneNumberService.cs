@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -22,16 +23,34 @@ namespace OpenEugene.Module.LittleHelpBook.Services
             return (data, response.StatusCode);
         }
 
-        public async Task<Models.PhoneNumber> AddPhoneNumberAsync(Models.PhoneNumber item)
+        public async Task<(Models.PhoneNumber, HttpStatusCode)> GetPhoneNumberAsync(int id)
         {
-            item.EnsureIAuditable();
-            return await PostJsonAsync<Models.PhoneNumber>($"{Apiurl}", item);
-            
+            var url = $"{Apiurl}/{id}";
+            (var data, var response) = await GetJsonWithResponseAsync<Models.PhoneNumber>(url);
+            return (data, response.StatusCode);
         }
 
-        public async Task DeletePhoneNumberAsync(int id)
+
+        public async Task<(Models.PhoneNumber,HttpStatusCode)> AddPhoneNumberAsync(Models.PhoneNumber item)
         {
-            await DeleteAsync($"{Apiurl}/{id}");
+            item.EnsureIAuditable();
+            (var data, var response) = await PostJsonWithResponseAsync<Models.PhoneNumber>($"{Apiurl}", item);
+            return (data, response.StatusCode);
         }
+
+        public async Task<(Models.PhoneNumber, HttpStatusCode)> UpdatePhoneNumberAsync(Models.PhoneNumber item)
+        {
+            item.EnsureIAuditable();
+            (var data, var response) = await PutJsonWithResponseAsync<Models.PhoneNumber>($"{Apiurl}", item);
+            return (data, response.StatusCode);
+        }
+
+        public async Task<HttpStatusCode> DeletePhoneNumberAsync(int id)
+        {
+            var url = $"{Apiurl}/{id}";
+            var response = await DeleteWithResponseAsync(url);
+            return response.StatusCode;
+        }
+
     }
 }

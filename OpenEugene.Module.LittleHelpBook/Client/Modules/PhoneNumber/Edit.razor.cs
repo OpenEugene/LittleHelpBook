@@ -13,13 +13,13 @@ using Oqtane.Shared;
 using Oqtane.Services;
 
 using OpenEugene.Module.LittleHelpBook.Services;
-
+using M = OpenEugene.Module.LittleHelpBook.Models;
 
 namespace OpenEugene.Module.PhoneNumber
 {
     public partial class Edit: ModuleBase
     {
-		[Inject] public LittleHelpBookService LittleHelpBookService { get; set; }
+		[Inject] public PhoneNumberService PhoneNumberService { get; set; }
 		[Inject] public NavigationManager NavigationManager { get; set; }
 		[Inject] public IStringLocalizer<Edit> Localizer { get; set; }		
         [Inject] public ISettingService SettingService { get; set; }
@@ -28,14 +28,14 @@ namespace OpenEugene.Module.PhoneNumber
         private bool success = false;
         private SettingsViewModel _settingsVM;
         private bool IsLoaded = false;
-        private Models.LittleHelpBook LittleHelpBook { get; set; } = new();
-        private int _LittleHelpBookId;
+        private M.PhoneNumber _phone = new();
+        private int _phoneId = -1;
 
-		public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+        public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
 
 		public override string Actions => "Add,Edit";
 
-		public override string Title => "Manage LittleHelpBook";
+		public override string Title => "Phone Number";
 
         public override List<Resource> Resources => new List<Resource>()
         {
@@ -54,17 +54,17 @@ namespace OpenEugene.Module.PhoneNumber
                 _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
 			    if (PageState.Action == "Edit")
 			    {
-				    _LittleHelpBookId = Int32.Parse(PageState.QueryString["id"]);
-                    (LittleHelpBook, var code) = await LittleHelpBookService.GetLittleHelpBookAsync(_LittleHelpBookId);
+				    _phoneId = Int32.Parse(PageState.QueryString["id"]);
+                    (_phone, var code) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
                     if (!IsSuccessStatusCode(code)) {
-                        throw new HttpRequestException($"Error loading LittleHelpBook. Code: {code}");
+                        throw new HttpRequestException($"Error loading PhoneNumber. Code: {code}");
                     }
 			    }
                 IsLoaded = true;
             }
 		    catch (Exception ex)
 		    {
-			    await logger.LogError(ex, "Error Loading LittleHelpBook {LittleHelpBookId} {Error}", _LittleHelpBookId, ex.Message);
+			    await logger.LogError(ex, "Error Loading PhoneNumber {_phoneId} {Error}", _phoneId, ex.Message);
 			    AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
 		    }
 	    }
@@ -79,28 +79,33 @@ namespace OpenEugene.Module.PhoneNumber
                 {
                     if (PageState.Action == "Add")
                     {
-                        LittleHelpBook.ModuleId = ModuleState.ModuleId;
-                        (LittleHelpBook, var code) = await LittleHelpBookService.AddLittleHelpBookAsync(LittleHelpBook);
+                        (_phone, var code) = await PhoneNumberService.AddPhoneNumberAsync(_phone);
                         if (code is not HttpStatusCode.OK) {
-                            throw new HttpRequestException($"Error Adding {LittleHelpBook}. Code: {code}");
+                            throw new HttpRequestException($"Error Adding {_phone}. Code: {code}");
                         }    
-                        await logger.LogInformation("LittleHelpBook Added {LittleHelpBook}", LittleHelpBook);
+                        await logger.LogInformation("Phone Added {LittleHelpBook}", _phone);
                     }
                     else
                     {
-                        (var LittleHelpBookLatest, var code) = await LittleHelpBookService.GetLittleHelpBookAsync(_LittleHelpBookId);
-                        if (code is not HttpStatusCode.OK) {
-                            throw new HttpRequestException($"Error loading LittleHelpBook. Code: {code}");
+                        (_phone, var code) = await PhoneNumberService.UpdatePhoneNumberAsync(_phone);
+
+                        (var phoneLatest, var codeLatest) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
+                        if (codeLatest is not HttpStatusCode.OK) {
+                            throw new HttpRequestException($"Error loading phone. Code: {codeLatest}");
                         }
                     
                         // update values from the local version of LittleHelpBook
-                        LittleHelpBookLatest.Name = LittleHelpBook.Name;
+                        phoneLatest.Number = _phone.Number;
+                        phoneLatest.AreaCode = _phone.AreaCode;
+                        phoneLatest.Extension = _phone.Extension;
+                        phoneLatest.Description = _phone.Description;
+
                         // update Database with the latest version of LittleHelpBook
-                        (LittleHelpBook, code) = await LittleHelpBookService.AddLittleHelpBookAsync(LittleHelpBookLatest);
+                        (_phone, code) = await PhoneNumberService.UpdatePhoneNumberAsync(phoneLatest);
                         if (code is not HttpStatusCode.OK) {
-                            throw new HttpRequestException($"Error Adding {LittleHelpBook}. Code: {code}");
+                            throw new HttpRequestException($"Error Updating {_phone}. Code: {code}");
                         }         
-                        await logger.LogInformation("LittleHelpBook Updated {LittleHelpBookLatest}", LittleHelpBookLatest);
+                        await logger.LogInformation("LittleHelpBook Updated {phoneLatest}", phoneLatest);
                     }
                     NavigationManager.NavigateTo(NavigateUrl());
                 }

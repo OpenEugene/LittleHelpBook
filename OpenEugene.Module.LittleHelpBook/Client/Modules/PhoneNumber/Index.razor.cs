@@ -12,6 +12,7 @@ using Oqtane.Shared;
 using Oqtane.Services;
 
 using OpenEugene.Module.LittleHelpBook.Services;
+using M = OpenEugene.Module.LittleHelpBook.Models;
 
 namespace OpenEugene.Module.PhoneNumber;
 
@@ -34,7 +35,8 @@ public partial class Index : ModuleBase
         new Resource { ResourceType = ResourceType.Script,      Url = ModulePath() + "Module.js" },
     };	
     private bool IsLoaded;
-    private SettingsViewModel _settingsVM; 
+    private SettingsViewModel _settingsVM;
+    private int _providerId = -1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,9 +44,10 @@ public partial class Index : ModuleBase
         {
             var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-            (_list, var code) = await LittleHelpBookService.GetLittleHelpBooksAsync();
+            _providerId = Int32.Parse(PageState.QueryString["id"]);
+            (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
             if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+                throw new HttpRequestException($"Error loading Phone Numbers. Code: {code}");
             }
 
             IsLoaded = true;
@@ -56,23 +59,23 @@ public partial class Index : ModuleBase
         }
     }
 
-    private async Task Delete(Models.LittleHelpBook LittleHelpBook)
+    private async Task Delete(M.PhoneNumber phone)
     {
         try
         {
-            var code = await LittleHelpBookService.DeleteLittleHelpBookAsync(LittleHelpBook.LittleHelpBookId);
+            var code = await PhoneNumberService.DeletePhoneNumberAsync(phone.PhoneNumberId);
             if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error Deleting LittleHelpBooks. id:{LittleHelpBook.LittleHelpBookId}, Code: {code}");
+                throw new HttpRequestException($"Error Deleting LittleHelpBooks. id:{phone.PhoneNumberId}, Code: {code}");
             }
-            await logger.LogInformation("LittleHelpBook Deleted {LittleHelpBook}", LittleHelpBook);
+            await logger.LogInformation("Phone Deleted {phone}", phone);
 
-            (_LittleHelpBooks, code ) = await LittleHelpBookService.GetLittleHelpBooksAsync();
+            (_list, code ) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
 
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting LittleHelpBook {LittleHelpBook} {Error}", LittleHelpBook, ex.Message);
+            await logger.LogError(ex, "Error Deleting Phone Number {LittleHelpBook} {Error}", phone, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
     }
