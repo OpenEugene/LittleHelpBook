@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Oqtane.Modules;
@@ -7,11 +9,18 @@ using Oqtane.Shared;
 
 namespace OpenEugene.Module.LittleHelpBook.Services
 {
-    public class PhoneNumberService : ServiceBase, IService
+    public class PhoneNumberService : ResponseServiceBase, IService
     {
-        public PhoneNumberService(HttpClient http, SiteState siteState) : base(http, siteState) { }
+        public PhoneNumberService(IHttpClientFactory http, SiteState siteState) : base(http, siteState) { }
 
         private string Apiurl => CreateApiUrl("PhoneNumber");
+
+        public async Task<(List<Models.PhoneNumber>, HttpStatusCode)> GetPhoneNumbersAsync(int id)
+        {
+            var url = $"{Apiurl}/provider/{id}";
+            (var data, var response) = await GetJsonWithResponseAsync<List<Models.PhoneNumber>>(url);
+            return (data, response.StatusCode);
+        }
 
         public async Task<Models.PhoneNumber> AddPhoneNumberAsync(Models.PhoneNumber item)
         {

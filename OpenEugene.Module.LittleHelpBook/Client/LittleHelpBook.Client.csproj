@@ -30,6 +30,18 @@
 		<Reference Include="Oqtane.Shared"><HintPath>..\..\oqtane.framework\Oqtane.Server\bin\Debug\net9.0\Oqtane.Shared.dll</HintPath></Reference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="Modules\PhoneNumber\Edit.razor">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	  <Content Update="Modules\PhoneNumber\Index.razor">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	  <Content Update="Modules\PhoneNumber\Settings.razor">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	</ItemGroup>
+
 	<PropertyGroup>
 		<!-- there may be other elements here -->
 		<BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>

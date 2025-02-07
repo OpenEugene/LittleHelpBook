@@ -7,6 +7,9 @@ using Oqtane.Controllers;
 using System.Net;
 using OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Repository;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using System;
 
 namespace OE.Module.LHB.Controllers;
 
@@ -16,6 +19,24 @@ public class PhoneNumberController : ModuleControllerBase
     private readonly LittleHelpBookRepository _LittleHelpBookRepository;
 
     public PhoneNumberController(LittleHelpBookRepository LittleHelpBookRepository, ILogManager logger, IHttpContextAccessor accessor) : base(logger, accessor) { _LittleHelpBookRepository = LittleHelpBookRepository; }
+
+    // GET api/<controller>/5
+    [HttpGet("/provider/{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult<PhoneNumber>> GetByProvider(int id)
+    {
+        try
+        {
+            var data = _LittleHelpBookRepository.GetPhoneNumbersByProviderId(id);
+            return Ok(data);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Read, "Failed LittleHelpBook Get Attempt {id}", id);
+            return StatusCode(500);
+        }
+    }
+
 
     // POST api/<controller>
     [HttpPost]
