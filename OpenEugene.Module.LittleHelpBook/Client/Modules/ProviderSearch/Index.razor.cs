@@ -16,6 +16,7 @@ using OpenEugene.Module.LittleHelpBook;
 using MudBlazor;
 using OpenEugene.Module.LittleHelpBook.Shared;
 using Oqtane.Security;
+using LittleHelpBook.Client.ViewModels;
 
 namespace OpenEugene.Module.ProviderSearch;
 
@@ -39,9 +40,8 @@ public partial class Index : ModuleBase
     };	
     private bool IsLoaded;
     private SettingsViewModel _settingsVM;
-    public override string UrlParametersTemplate => "/{providerId}";
-    private const string idKey = "providerId";
-
+    public override string UrlParametersTemplate => Routing.ProviderTemplate;
+ 
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,14 +116,14 @@ public partial class Index : ModuleBase
     private void Edit(LittleHelpBook.Models.Provider item)
     {
         var parms = AddUrlParameters(item.ProviderId);
-        var url = NavigateUrl("/provider", parms);
+        var url = NavigateUrl(Routing.ProviderRoute, parms);
         NavigationManager.NavigateTo(url);
     }
 
     private void Detail(LittleHelpBook.Models.Provider item)
     {
         var parms = AddUrlParameters(item.ProviderId);
-        var url = NavigateUrl("/provider", parms);
+        var url = NavigateUrl(Routing.ProviderRoute, parms);
         NavigationManager.NavigateTo(url);
     }
 

@@ -15,7 +15,8 @@ namespace OpenEugene.Module.Provider
             ServerManagerType = "OE.Module.LHB.Manager.LHBManager, OE.Module.LHB.Server.Oqtane",
             ReleaseVersions = "1.1.0",
             Dependencies = "OpenEugene.Module.LittleHelpBook.Shared.Oqtane,MudBlazor",
-            PackageName = "OpenEugene.LittleHelpBook"
+            PackageName = "OpenEugene.LittleHelpBook",
+            DefaultAction = "Detail"
         };
     }
 }

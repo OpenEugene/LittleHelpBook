@@ -13,6 +13,7 @@ using Oqtane.Services;
 
 using OpenEugene.Module.LittleHelpBook.Services;
 using M = OpenEugene.Module.LittleHelpBook.Models;
+using LittleHelpBook.Client.ViewModels;
 
 namespace OpenEugene.Module.PhoneNumber;
 
@@ -38,9 +39,8 @@ public partial class Index : ModuleBase
     private SettingsViewModel _settingsVM;
     private int _providerId = -1;
 
-    public override string UrlParametersTemplate => "/{providerId}";
-    private const string idKey = "providerId";
-
+    public override string UrlParametersTemplate => Routing.ProviderTemplate;
+    
     protected override async Task OnInitializedAsync()
     {
         try
@@ -58,12 +58,11 @@ public partial class Index : ModuleBase
     protected override async Task OnParametersSetAsync()
     {
         if (!ShouldRender()) return;
-        if (!UrlParameters.ContainsKey(idKey)) return;  // route complete?
+        if (!UrlParameters.ContainsKey(Routing.ProviderId)) return;  // route complete?
 
         try
         {
-            var parm = UrlParameters[idKey];
-            _providerId = Int32.Parse(parm);
+            _providerId = Int32.Parse(UrlParameters[Routing.ProviderId]);
             (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
             if (!IsSuccessStatusCode(code))
             {

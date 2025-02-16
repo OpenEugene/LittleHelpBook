@@ -13,7 +13,8 @@ namespace OpenEugene.Module.PhoneNumber
             ServerManagerType = "OpenEugene.Module.LittleHelpBook.Manager.LittleHelpBookManager, OpenEugene.Module.LittleHelpBook.Server.Oqtane",
             ReleaseVersions = "1.0.0",
             Dependencies = "OpenEugene.Module.LittleHelpBook.Shared.Oqtane,MudBlazor",
-            PackageName = "OpenEugene.LittleHelpBook" 
+            PackageName = "OpenEugene.LittleHelpBook",
+            DefaultAction = "Index"
         };
     }
 }
