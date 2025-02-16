@@ -38,25 +38,44 @@ public partial class Index : ModuleBase
     private SettingsViewModel _settingsVM;
     private int _providerId = -1;
 
+    public override string UrlParametersTemplate => "/{providerId}";
+    private const string idKey = "providerId";
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-            _providerId = Int32.Parse(PageState.QueryString["providerId"]);
-            (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
-            if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error loading Phone Numbers. Code: {code}");
-            }
 
-            IsLoaded = true;
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading LittleHelpBook {Error}", ex.Message);
+            await logger.LogError(ex, "Error Loading Phone Number Settings {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ShouldRender()) return;
+        if (!UrlParameters.ContainsKey(idKey)) return;  // route complete?
+
+        try
+        {
+            var parm = UrlParameters[idKey];
+            _providerId = Int32.Parse(parm);
+            (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
+            if (!IsSuccessStatusCode(code))
+            {
+                throw new HttpRequestException($"Error loading Phone Numbers. Code: {code}");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error Loading Phone Numbers {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+        IsLoaded = true;
     }
 
     private async Task Delete(M.PhoneNumber phone)

@@ -38,7 +38,10 @@ public partial class Index : ModuleBase
         new Resource { ResourceType = ResourceType.Script,      Url = ModulePath() + "Module.js" },
     };	
     private bool IsLoaded;
-    private SettingsViewModel _settingsVM; 
+    private SettingsViewModel _settingsVM;
+    public override string UrlParametersTemplate => "/{providerId}";
+    private const string idKey = "providerId";
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,14 +115,15 @@ public partial class Index : ModuleBase
 
     private void Edit(LittleHelpBook.Models.Provider item)
     {
-        var url = EditUrl("/provider", 0, "Edit", $"providerId={item.ProviderId}");
+        var parms = AddUrlParameters(item.ProviderId);
+        var url = NavigateUrl("/provider", parms);
         NavigationManager.NavigateTo(url);
     }
 
     private void Detail(LittleHelpBook.Models.Provider item)
     {
-        //var url = EditUrl("/provider",0,"Detail", $"providerId={item.ProviderId}");
-        var url = $"/provider?providerId={item.ProviderId}";
+        var parms = AddUrlParameters(item.ProviderId);
+        var url = NavigateUrl("/provider", parms);
         NavigationManager.NavigateTo(url);
     }
 

@@ -52,24 +52,34 @@ namespace OpenEugene.Module.PhoneNumber
 		    {
                 var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
                 _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-			    if (PageState.Action == "Edit")
-			    {
-				    _phoneId = Int32.Parse(PageState.QueryString["id"]);
-                    (_phone, var code) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
-                    if (!IsSuccessStatusCode(code)) {
-                        throw new HttpRequestException($"Error loading PhoneNumber. Code: {code}");
-                    }
-			    }
-                IsLoaded = true;
-            }
+	        }
 		    catch (Exception ex)
 		    {
-			    await logger.LogError(ex, "Error Loading PhoneNumber {_phoneId} {Error}", _phoneId, ex.Message);
+			    await logger.LogError(ex, "Error Loading PhoneNumber settings {Error}", ex.Message);
 			    AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
 		    }
 	    }
 
-		private async Task Save()
+        protected override async Task OnParametersSetAsync()
+        {
+            try
+            {
+                _phoneId = Int32.Parse(UrlParameters["id"]);
+                (_phone, var code) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
+                if (!IsSuccessStatusCode(code))
+                {
+                    throw new HttpRequestException($"Error loading PhoneNumber. Code: {code}");
+                }
+                IsLoaded = true;
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error Loading PhoneNumber {Error}", ex.Message);
+                AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+            }
+        }
+
+        private async Task Save()
 		{
             try
             {

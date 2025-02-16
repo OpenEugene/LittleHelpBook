@@ -38,7 +38,11 @@ public partial class Index : ModuleBase
         new Resource { ResourceType = ResourceType.Script,      Url = ModulePath() + "Module.js" },
     };	
     private bool IsLoaded;
-    private SettingsViewModel _settingsVM; 
+    private SettingsViewModel _settingsVM;
+    public override string UrlParametersTemplate => "/{providerId}";
+    private const string idKey = "providerId";
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +64,21 @@ public partial class Index : ModuleBase
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
+
+    protected override async Task OnParametersSetAsync() {
+        if (UrlParameters.ContainsKey(idKey)) {
+            var providerId = UrlParameters[idKey];
+            
+            if (UserSecurity.IsAuthorized(PageState.User, LhbRoleNames.Editors))
+            {
+                Edit(providerId);
+            }
+            else
+            {
+                Detail(providerId);
+            }
+        }
+    } 
 
     private Func<LittleHelpBook.Models.Provider, bool> _quickFilter => x =>
     {
@@ -102,23 +121,23 @@ public partial class Index : ModuleBase
         // check the asp.net roles to see where to navigate
         if (UserSecurity.IsAuthorized(PageState.User, LhbRoleNames.Editors))
         {
-            Edit(args.Item);
+            Edit(args.Item.ProviderId.ToString());
         }
         else
         {
-            Detail(args.Item);
+            Detail(args.Item.ProviderId.ToString());
         }
     }
 
-    private void Edit(LittleHelpBook.Models.Provider item)
+    private void Edit(string providerId)
     {
-        var url = EditUrl("Edit", $"id={item.ProviderId}");
+        var url = EditUrl("Edit", $"id={providerId}");
         NavigationManager.NavigateTo(url);
     }
 
-    private void Detail(LittleHelpBook.Models.Provider item)
+    private void Detail(string providerId)
     {
-        var url = EditUrl("Detail", $"id={item.ProviderId}");
+        var url = EditUrl("Detail", $"id={providerId}");
         NavigationManager.NavigateTo(url);
     }
 

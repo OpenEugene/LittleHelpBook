@@ -16,45 +16,34 @@
 }
 else
 {
-<ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add LittleHelpBook" ResourceKey="Add" />
-<br />
-<br />
     @if (_list.Any())
     {
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-            <MudText Class="mb-4">Phone Numbers</MudText>
-            <MudTable Items="@_list">
-                <ColGroup>
-                    <col style="width: 10px;" />
-                    <col style="width: 10px;" />
-                    <col />
-                </ColGroup>
-                <HeaderContent>
-                    <MudTh>&nbsp;</MudTh>
-                    <MudTh>&nbsp;</MudTh>
-                    <MudTh>@Localizer["Number"]</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd Class="pa-2"><ActionLink Action="Edit" Parameters="@($"id=" + context.PhoneNumberId.ToString())" ResourceKey="Edit" /></MudTd>
-                    <MudTd Class="pa-2"><ActionDialog Header="Delete Phone Number" Message="Are You Sure You Wish To Delete This Phone Number?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" /></MudTd>
-                    <MudTd DataLabel="Area">@context.AreaCode</MudTd>
-                    <MudTd DataLabel="Number">@context.Number</MudTd>
-                    <MudTd DataLabel="Description">@context.Description</MudTd>
-                </RowTemplate>
-                <PagerContent>
-                    <MudPaper Outlined="true" Class="border-dashed">
-                        <MudStack Justify="Justify.SpaceBetween" Row="true">
-                            <MudPaper Class="pa-3"><ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add LittleHelpBook" ResourceKey="Add" /></MudPaper>
-                            <MudPaper Class="pa-3"><MudTablePager PageSizeOptions="new int[]{10, 25, 50, 100}" /></MudPaper>
-                        </MudStack>
-                    </MudPaper>
-                </PagerContent>
-            </MudTable>
-        </MudContainer>
+        <MudDataGrid Items="@_list" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+            <Columns>
+                <PropertyColumn Property="x => x.AreaCode" Title="Area" />
+                <PropertyColumn Property="x => x.Number" />
+                <PropertyColumn Property="x => x.Description" Title="Years Employed" />
+                <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
+                    <Authorized>
+                        <TemplateColumn CellClass="d-flex justify-end">
+                            <CellTemplate>
+                                <MudStack row>
+                                <ActionLink Action="Edit" Text="Edit" ResourceKey="Edit" Parameters="@($"id={context.Item.PhoneNumberId}")" />
+                                <ActionLink Action="Delete" Text="Delete" ResourceKey="Delete" Parameters="@($"id={context.Item.PhoneNumberId}")" />
+                                </MudStack>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Authorized>
+                </AuthorizeView>
+            </Columns>
+        </MudDataGrid>
     }
     else
     {
-        <MudPaper Class="pa-3"><ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add LittleHelpBook" ResourceKey="Add" /></MudPaper>
-        <p>@Localizer["Message.DisplayNone"]</p>
+        <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
+            <Authorized>
+                <ActionLink Action="Add" Text="Add Phone Number" ResourceKey="Add" Parameters="@($"ProviderId={_providerId}")" />
+            </Authorized>
+        </AuthorizeView>
     }
 }

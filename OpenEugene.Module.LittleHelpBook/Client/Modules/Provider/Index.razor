@@ -38,12 +38,12 @@ else
                             <Authorized>
                                 <MudIconButton Size="@Size.Small"
                                                Icon="@MudBlazor.Icons.Material.Outlined.Edit"
-                                               OnClick="@(()=>Edit(context.Item))" />
+                                               OnClick="@(()=>Edit(context.Item.ProviderId.ToString()))" />
                             </Authorized>
                             <NotAuthorized>
                                 <MudIconButton Size="@Size.Small"
                                                Icon="@MudBlazor.Icons.Material.Filled.Preview"
-                                               OnClick="@(()=>Detail(context.Item))" />
+                                               OnClick="@(()=>Detail(context.Item.ProviderId.ToString()))" />
                             </NotAuthorized>
                         </AuthorizeView>
                     </CellTemplate>
