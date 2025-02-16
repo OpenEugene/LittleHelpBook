@@ -16,6 +16,7 @@ using OpenEugene.Module.LittleHelpBook;
 using MudBlazor;
 using OpenEugene.Module.LittleHelpBook.Shared;
 using Oqtane.Security;
+using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 
 namespace OpenEugene.Module.Provider;
 
@@ -39,8 +40,7 @@ public partial class Index : ModuleBase
     };	
     private bool IsLoaded;
     private SettingsViewModel _settingsVM;
-    public override string UrlParametersTemplate => "/{providerId}";
-    private const string idKey = "providerId";
+    public override string UrlParametersTemplate => Routing.ProviderTemplate;
 
 
 
@@ -66,8 +66,8 @@ public partial class Index : ModuleBase
     }
 
     protected override async Task OnParametersSetAsync() {
-        if (UrlParameters.ContainsKey(idKey)) {
-            var providerId = UrlParameters[idKey];
+        if (UrlParameters.ContainsKey(Routing.ProviderId)) {
+            var providerId = UrlParameters[Routing.ProviderId];
             
             if (UserSecurity.IsAuthorized(PageState.User, LhbRoleNames.Editors))
             {

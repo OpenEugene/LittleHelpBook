@@ -18,25 +18,27 @@ else
 {
     @if (_list.Any())
     {
-        <MudDataGrid Items="@_list" Filterable="false" SortMode="@SortMode.None" Groupable="false">
-            <Columns>
-                <PropertyColumn Property="x => x.AreaCode" Title="Area" />
-                <PropertyColumn Property="x => x.Number" />
-                <PropertyColumn Property="x => x.Description" Title="Years Employed" />
-                <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
-                    <Authorized>
-                        <TemplateColumn CellClass="d-flex justify-end">
-                            <CellTemplate>
-                                <MudStack row>
-                                <ActionLink Action="Edit" Text="Edit" ResourceKey="Edit" Parameters="@($"id={context.Item.PhoneNumberId}")" />
-                                <ActionLink Action="Delete" Text="Delete" ResourceKey="Delete" Parameters="@($"id={context.Item.PhoneNumberId}")" />
-                                </MudStack>
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Authorized>
-                </AuthorizeView>
-            </Columns>
-        </MudDataGrid>
+        <MudField Label="Phone Number(s)" Variant="Variant.Outlined">
+            <MudDataGrid Items="@_list" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+                <Columns>
+                    <PropertyColumn Property="x => x.AreaCode" Title="Area" />
+                    <PropertyColumn Property="x => x.Number" />
+                    <PropertyColumn Property="x => x.Description" Title="Years Employed" />
+                    <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
+                        <Authorized>
+                            <TemplateColumn CellClass="d-flex justify-end">
+                                <CellTemplate>
+                                    <MudStack row>
+                                    <ActionLink Action="Edit" Text="Edit" ResourceKey="Edit" Parameters="@($"id={context.Item.PhoneNumberId}")" />
+                                    <ActionLink Action="Delete" Text="Delete" ResourceKey="Delete" Parameters="@($"id={context.Item.PhoneNumberId}")" />
+                                    </MudStack>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Authorized>
+                    </AuthorizeView>
+                </Columns>
+            </MudDataGrid>
+        </MudField>
     }
     else
     {

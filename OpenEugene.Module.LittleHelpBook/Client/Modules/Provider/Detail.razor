@@ -8,6 +8,7 @@
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Detail> Localizer
 @inject IDialogService DialogService
+@inject ISettingService SettingService
 
 
 @if (_model != null) {
@@ -38,13 +39,6 @@
                     <ProviderAttribute Attributes="@_model.ProviderAttributes" > </ProviderAttribute>
                 }
             </MudField>
-            <MudField Label="Phone Number(s)" Variant="Variant.Outlined">
-                @if (_orderedPhoneNumbers.Any()) {
-                    @foreach (var phone in _orderedPhoneNumbers) {
-                        <PhoneNumberDisplay Phone="@phone" ></PhoneNumberDisplay>
-                    }
-                }
-            </MudField>
             <MudField Label="Address(es)" Variant="Variant.Outlined">
 
                 @if (_orderedAddresses.Any()) {
@@ -72,13 +66,30 @@
 
     private List<M.PhoneNumber> _orderedPhoneNumbers;
     private List<M.Address> _orderedAddresses;
+    public override string UrlParametersTemplate => Routing.ProviderTemplate;
 
     MudMessageBox Mbox { get; set; }
+    private SettingsViewModel _settingsVM;
+
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
+            var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+            _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading provider settings {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
         try {
-            _id = int.Parse(PageState.QueryString["id"]);
+            _id = int.Parse(UrlParameters[Routing.ProviderId]);
             await Refresh();
         }
         catch (Exception ex) {
@@ -89,7 +100,6 @@
 
     private async Task Refresh() {
         _model = await ProviderService.GetProviderViewModelAsync(_id);
-        _orderedPhoneNumbers = _model.PhoneNumbers.OrderByDescending(p => p.IsActive).ToList();
         _orderedAddresses = _model.Addresses.OrderByDescending(a => a.IsActive).ToList();
     }
 

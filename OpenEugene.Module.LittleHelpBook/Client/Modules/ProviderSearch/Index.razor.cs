@@ -16,7 +16,7 @@ using OpenEugene.Module.LittleHelpBook;
 using MudBlazor;
 using OpenEugene.Module.LittleHelpBook.Shared;
 using Oqtane.Security;
-using LittleHelpBook.Client.ViewModels;
+using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 
 namespace OpenEugene.Module.ProviderSearch;
 

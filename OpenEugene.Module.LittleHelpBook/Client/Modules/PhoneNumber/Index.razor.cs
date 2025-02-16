@@ -13,7 +13,7 @@ using Oqtane.Services;
 
 using OpenEugene.Module.LittleHelpBook.Services;
 using M = OpenEugene.Module.LittleHelpBook.Models;
-using LittleHelpBook.Client.ViewModels;
+using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 
 namespace OpenEugene.Module.PhoneNumber;
 

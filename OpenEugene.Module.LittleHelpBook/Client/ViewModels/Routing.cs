@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LittleHelpBook.Client.ViewModels
+namespace OpenEugene.Module.LittleHelpBook.Client.Viewmodels
 {
     internal class Routing
     {
