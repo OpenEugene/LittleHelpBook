@@ -56,8 +56,6 @@
     private int _id;
     private ProviderViewModel _model;
 
-    private List<M.PhoneNumber> _orderedPhoneNumbers;
-    private List<M.Address> _orderedAddresses;
     public override string UrlParametersTemplate => Routing.ProviderTemplate;
 
     MudMessageBox Mbox { get; set; }
@@ -92,7 +90,6 @@
 
     private async Task Refresh() {
         _model = await ProviderService.GetProviderViewModelAsync(_id);
-        _orderedAddresses = _model.Addresses.OrderByDescending(a => a.IsActive).ToList();
     }
 
     private void Back() { 

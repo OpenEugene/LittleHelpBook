@@ -11,6 +11,9 @@ using System.Net;
 using Oqtane.Models;
 using OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Repository;
+using System.Threading.Tasks;
+using System;
+using OpenEugene.Module.LittleHelpBook.ViewModels;
 
 namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
@@ -27,7 +30,7 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // GET: api/<controller>?moduleid=x
         [HttpGet]
-        public IEnumerable<Attribute> Get()
+        public IEnumerable<Models.Attribute> Get()
         {
             try
             {
@@ -43,5 +46,21 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         }
 
+    [HttpGet("provider/{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult<ProviderAttributeViewModel>> GetByProvider(int id)
+    {
+        try
+        {
+            var data = _LittleHelpBookRepository.GetProviderAttributesByProviderId(id);
+            return Ok(data);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Read, "Failed Address Get Attempt {id}", id);
+            return StatusCode(500);
+        }
     }
+
+}
 

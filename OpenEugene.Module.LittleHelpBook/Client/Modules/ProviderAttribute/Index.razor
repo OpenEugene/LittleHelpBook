@@ -1,0 +1,22 @@
+@namespace OpenEugene.Module.ProviderAttribute
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs 
+<MudDialogProvider />*@
+
+@* Needed for snackbars 
+<MudSnackbarProvider />*@
+
+@if (_list == null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+    <MudField Label="Services" Variant="Variant.Outlined">
+        <ProviderAttribute Attributes="_list" />
+    </MudField>
+}
