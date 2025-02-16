@@ -39,14 +39,6 @@
                     <ProviderAttribute Attributes="@_model.ProviderAttributes" > </ProviderAttribute>
                 }
             </MudField>
-            <MudField Label="Address(es)" Variant="Variant.Outlined">
-
-                @if (_orderedAddresses.Any()) {
-                    @foreach (var addr in _orderedAddresses) {
-                        <AddressDisplay Addr="@addr" ></AddressDisplay>
-                    }
-                }
-            </MudField>
                 
         </MudCardContent>
         <MudCardActions>

@@ -1,0 +1,19 @@
+@using Oqtane.Modules.Controls
+
+@namespace OpenEugene.Module.Address
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs
+<MudDialogProvider />*@
+
+@* Needed for snackbars
+<MudSnackbarProvider />*@
+
+@if (IsLoaded)
+{
+    <AddressEdit Addr="_item" />
+}
+

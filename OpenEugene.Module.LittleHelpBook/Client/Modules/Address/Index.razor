@@ -1,0 +1,26 @@
+@namespace OpenEugene.Module.Address
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs 
+<MudDialogProvider />*@
+
+@* Needed for snackbars 
+<MudSnackbarProvider />*@
+
+@if (_list == null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+    <MudField Label="Address(es)" Variant="Variant.Outlined">
+        @foreach (var addr in _list)
+        {
+            <AddressDisplay Addr="@addr"></AddressDisplay>
+        }
+
+    </MudField>
+}

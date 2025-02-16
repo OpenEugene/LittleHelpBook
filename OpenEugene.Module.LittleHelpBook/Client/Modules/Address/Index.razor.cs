@@ -1,0 +1,103 @@
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Oqtane.Models;
+using Oqtane.Modules;
+using Oqtane.Shared;
+using Oqtane.Services;
+
+using OpenEugene.Module.LittleHelpBook.Services;
+using M= OpenEugene.Module.LittleHelpBook.Models;
+using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+
+namespace OpenEugene.Module.Address;
+
+public partial class Index : ModuleBase
+{
+    List<M.Address> _list;
+		
+    [Inject] public AddressService AddressService { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public IStringLocalizer<Index> Localizer { get; set; }
+    [Inject] public ISettingService SettingService { get; set; }
+	
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Resource { ResourceType = ResourceType.Stylesheet,  Url = "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" },
+        new Resource { ResourceType = ResourceType.Stylesheet,  Url = "_content/MudBlazor/MudBlazor.min.css" },
+        new Resource { ResourceType = ResourceType.Stylesheet,  Url = ModulePath() + "Module.css" },
+        new Resource { ResourceType = ResourceType.Script,      Url = "_content/MudBlazor/MudBlazor.min.js", Location = ResourceLocation.Body, Level = ResourceLevel.Site },
+        new Resource { ResourceType = ResourceType.Script,      Url = ModulePath() + "Module.js" },
+    };	
+    private bool IsLoaded;
+    private SettingsViewModel _settingsVM;
+
+    private int _providerId = -1;
+
+    public override string UrlParametersTemplate => Routing.ProviderTemplate;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+            _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading LittleHelpBook {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ShouldRender()) return;
+
+        if (UrlParameters.ContainsKey(Routing.ProviderId)) {
+
+            _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
+
+            (_list, var code) = await AddressService.GetAddressesAsync(_providerId);
+            if (!IsSuccessStatusCode(code))
+            {
+                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+            }
+
+            IsLoaded = true;
+        }
+    }
+
+
+    private async Task Delete(M.Address item)
+    {
+        try
+        {
+            var code = await AddressService.DeleteAddressAsync(item.AddressId);
+            if (!IsSuccessStatusCode(code)) {
+                throw new HttpRequestException($"Error Deleting LittleHelpBooks. id:{item.AddressId}, Code: {code}");
+            }
+            await logger.LogInformation("LittleHelpBook Deleted {item}", item);
+
+            (_list, code ) = await AddressService.GetAddressesAsync(_providerId);
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting LittleHelpBook {item} {Error}", item, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
+        return (int)statusCode >= 200 && (int)statusCode <= 299; 
+    }
+}
+
