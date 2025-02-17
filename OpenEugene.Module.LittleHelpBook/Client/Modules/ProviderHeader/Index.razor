@@ -1,0 +1,44 @@
+@namespace OpenEugene.Module.ProviderHeader
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs 
+<MudDialogProvider />*@
+
+@* Needed for snackbars 
+<MudSnackbarProvider />*@
+
+@if (_model != null)
+{
+
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudField Label="@Localizer["Name"]">
+                <MudText>@_model.Name</MudText>
+            </MudField>
+            <MudField Label="@Localizer["Description"]">
+                <MudText>@_model.Description</MudText>
+            </MudField>
+            <MudField Label="@Localizer["Web Address"]">
+                <MudText>@_model.WebAddress</MudText>
+            </MudField>
+            <MudField Label="@Localizer["Email Address"]">
+                <MudText>@_model.EmailAddress</MudText>
+            </MudField>
+            <MudField Label="@Localizer["Hours of Operation"]">
+                <MudText>@_model.HoursOfOperation</MudText>
+            </MudField>
+
+
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Color="Color.Secondary" OnClick="Back">@Localizer["Back"]</MudButton>
+        </MudCardActions>
+    </MudCard>
+
+}

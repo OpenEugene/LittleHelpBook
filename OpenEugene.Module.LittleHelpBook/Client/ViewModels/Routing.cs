@@ -12,6 +12,11 @@ namespace OpenEugene.Module.LittleHelpBook.Client.Viewmodels
         public const string ProviderTemplate = "/{providerId}";
         public const string ProviderId = "providerId";
         public const string ProviderRoute = "/provider";
+        public const string ProviderList = "/providers";
+
+        // phone constants for URLParameters
+        public const string PhoneTemplate = "/{providerId}/{phoneId}";
+        public const string PhoneId = "phoneId";
 
     }
 }

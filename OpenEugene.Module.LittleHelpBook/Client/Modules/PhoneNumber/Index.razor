@@ -21,16 +21,15 @@ else
         <MudField Label="Phone Number(s)" Variant="Variant.Outlined">
             <MudDataGrid Items="@_list" Filterable="false" SortMode="@SortMode.None" Groupable="false">
                 <Columns>
-                    <PropertyColumn Property="x => x.AreaCode" Title="Area" />
-                    <PropertyColumn Property="x => x.Number" />
-                    <PropertyColumn Property="x => x.Description" Title="Years Employed" />
-                    <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
+                    <PropertyColumn Property="x => x.FullNumber" Title="Number"  />
+                    <PropertyColumn Property="x => x.Description" />
+                    <AuthorizeView Roles="@(LhbRoleNames.Editors)" Context="authCon">
                         <Authorized>
                             <TemplateColumn CellClass="d-flex justify-end">
                                 <CellTemplate>
                                     <MudStack row>
-                                    <ActionLink Action="Edit" Text="Edit" ResourceKey="Edit" Parameters="@($"id={context.Item.PhoneNumberId}")" />
-                                    <ActionLink Action="Delete" Text="Delete" ResourceKey="Delete" Parameters="@($"id={context.Item.PhoneNumberId}")" />
+                                        <MudIconButton OnClick="@(m => Edit(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
+                                        <MudIconButton OnClick="@(m => Delete(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
                                     </MudStack>
                                 </CellTemplate>
                             </TemplateColumn>

@@ -9,7 +9,7 @@ namespace OpenEugene.Module.Provider
     {
         public ModuleDefinition ModuleDefinition => new ModuleDefinition
         {
-            Name = "Provider",
+            Name = "Provider (old)",
             Description = "Providers",
             Version = "1.1.0",
             ServerManagerType = "OE.Module.LHB.Manager.LHBManager, OE.Module.LHB.Server.Oqtane",

@@ -12,18 +12,18 @@ using Oqtane.Shared;
 using Oqtane.Services;
 
 using OpenEugene.Module.LittleHelpBook.Services;
-using M = OpenEugene.Module.LittleHelpBook.Models;
+using M= OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
-using static MudBlazor.CategoryTypes;
+using OpenEugene.Module.LittleHelpBook.ViewModels;
+using Oqtane.UI;
 
-namespace OpenEugene.Module.PhoneNumber;
+namespace OpenEugene.Module.ProviderHeader;
 
 public partial class Index : ModuleBase
 {
-    List<LittleHelpBook.Models.PhoneNumber> _list;
-
-
-    [Inject] public PhoneNumberService PhoneNumberService { get; set; }
+    M.Provider _model;
+		
+    [Inject] public ProviderService ProviderService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
@@ -38,76 +38,50 @@ public partial class Index : ModuleBase
     };	
     private bool IsLoaded;
     private SettingsViewModel _settingsVM;
+
     private int _providerId = -1;
 
-    public override string UrlParametersTemplate => Routing.PhoneTemplate;
-    
+    public override string UrlParametersTemplate => Routing.ProviderTemplate;
+
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Phone Number Settings {Error}", ex.Message);
+            await logger.LogError(ex, "Error Loading LittleHelpBook {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
+
     protected override async Task OnParametersSetAsync()
     {
         if (!ShouldRender()) return;
-        if (!UrlParameters.ContainsKey(Routing.ProviderId)) return;  // route complete?
 
-        try
-        {
-            _providerId = Int32.Parse(UrlParameters[Routing.ProviderId]);
-            (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
+        if (UrlParameters.ContainsKey(Routing.ProviderId)) {
+
+            _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
+
+            (_model, var code) = await ProviderService.GetProviderAsync(_providerId);
             if (!IsSuccessStatusCode(code))
             {
-                throw new HttpRequestException($"Error loading Phone Numbers. Code: {code}");
+                throw new HttpRequestException($"Error loading Providers. Code: {code}");
             }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error Loading Phone Numbers {Error}", ex.Message);
-            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
-        }
-        IsLoaded = true;
-    }
 
-    private async Task Delete(M.PhoneNumber phone)
-    {
-        try
-        {
-            var code = await PhoneNumberService.DeletePhoneNumberAsync(phone.PhoneNumberId);
-            if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error Deleting LittleHelpBooks. id:{phone.PhoneNumberId}, Code: {code}");
-            }
-            await logger.LogInformation("Phone Deleted {phone}", phone);
-
-            (_list, code ) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
-
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Deleting Phone Number {LittleHelpBook} {Error}", phone, ex.Message);
-            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+            IsLoaded = true;
         }
     }
 
-    private void Edit(M.PhoneNumber item)
-    {
-        var parms = AddUrlParameters(_providerId, item.PhoneNumberId);
-        var url = EditUrl(PageState.Page.Path, ModuleState.ModuleId, "Edit", parms);
-        NavigationManager.NavigateTo(url);
+    private void Back() { 
+        NavigationManager.NavigateTo(Routing.ProviderList);
     }
 
-
-    static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
+   
+     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
         return (int)statusCode >= 200 && (int)statusCode <= 299; 
     }
 }

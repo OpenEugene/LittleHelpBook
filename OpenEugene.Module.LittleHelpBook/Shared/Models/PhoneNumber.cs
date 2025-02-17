@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 using Oqtane.Models;
 
 namespace OpenEugene.Module.LittleHelpBook.Models;
@@ -30,5 +31,19 @@ public partial class PhoneNumber : ModelBase
 
     public bool IsActive { get; set; }
 
-
+    public string FullNumber { get {
+            var builder = new StringBuilder();
+            if (CountryCode>0) {
+                builder.AppendFormat("{0} ",CountryCode);
+            }
+            if (AreaCode > 0) {
+                builder.AppendFormat("({0})", AreaCode);
+            }
+            builder.Append(Number);
+            if (Extension > 0) {
+                builder.AppendFormat("x{0}", Extension);
+            }
+            return builder.ToString();
+        } 
+    }
 }

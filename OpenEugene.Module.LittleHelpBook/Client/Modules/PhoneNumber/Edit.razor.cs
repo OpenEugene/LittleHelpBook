@@ -14,6 +14,8 @@ using Oqtane.Services;
 
 using OpenEugene.Module.LittleHelpBook.Services;
 using M = OpenEugene.Module.LittleHelpBook.Models;
+using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using Oqtane.UI;
 
 namespace OpenEugene.Module.PhoneNumber
 {
@@ -46,6 +48,8 @@ namespace OpenEugene.Module.PhoneNumber
             new Resource { ResourceType = ResourceType.Script,      Url = ModulePath() + "Module.js" },
         };
 
+        public override string UrlParametersTemplate => Routing.PhoneTemplate;
+
         protected override async Task OnInitializedAsync()
 	    {
 		    try
@@ -62,9 +66,11 @@ namespace OpenEugene.Module.PhoneNumber
 
         protected override async Task OnParametersSetAsync()
         {
+            if (!ShouldRender()) return;
+
             try
             {
-                _phoneId = Int32.Parse(UrlParameters["id"]);
+                _phoneId = Int32.Parse(UrlParameters[Routing.PhoneId]);
                 (_phone, var code) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
                 if (!IsSuccessStatusCode(code))
                 {
