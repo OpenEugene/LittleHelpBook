@@ -14,38 +14,26 @@
 
 @if (IsLoaded)
 {
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-    <MudGrid>
-        <MudItem xs="12">
-            <MudPaper Class="pa-4">
-                <MudForm @ref="mudform" @bind-IsValid="@success">
-                        <MudTextField Label="@Localizer["AreaCode"]" @bind-Value="_phone.AreaCode" For="@(() => _phone.AreaCode)" />
-                        <MudTextField Label="@Localizer["Number"]" @bind-Value="_phone.Number" For="@(() => _phone.Number)" />
-                        <MudTextField Label="@Localizer["Extension"]" @bind-Value="_phone.Extension" For="@(() => _phone.Extension)" />
-                        <MudTextField Label="@Localizer["Description"]" @bind-Value="_phone.Description" For="@(() => _phone.Description)" />
-                        <MudSelect @bind-Value="@_phone.IsActive" Label="Is Active">
-                            <MudSelectItem Value="@(false)">False</MudSelectItem>
-                            <MudSelectItem Value="@(true)">True</MudSelectItem>
-                        </MudSelect>
-\                </MudForm>
-            </MudPaper>
-            <MudDivider Class="pt-1 pb-1" />
-            <MudPaper Class="pa-3">
-                <MudStack Justify="Justify.SpaceBetween" Row="true">
-                    <MudItem>
-                        <AuditInfo DateTimeFormat="dd-MMM-yyyy hh:mm" CreatedBy="@_phone.CreatedBy" CreatedOn="@_phone.CreatedOn"
-                                   ModifiedBy="@_phone.ModifiedBy" ModifiedOn="@_phone.ModifiedOn"></AuditInfo>
-                    </MudItem>
-                    <MudItem Class="d-flex align-end ">
-                        <div class="d-flex flex-row justify-end gap-0">
-                            <MudButton Variant="Variant.Filled" Color="Color.Success" DisableElevation="true" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
-                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" Href="@NavigateUrl()" Class="mx-2">@Localizer["Cancel"]</MudButton>
-                        </div>
-                    </MudItem>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudForm @ref="mudform" @bind-IsValid="@success">
+                <MudTextField Label="@Localizer["AreaCode"]" @bind-Value="_phone.AreaCode" For="@(() => _phone.AreaCode)" />
+                <MudTextField Label="@Localizer["Number"]" @bind-Value="_phone.Number" For="@(() => _phone.Number)" />
+                <MudTextField Label="@Localizer["Extension"]" @bind-Value="_phone.Extension" For="@(() => _phone.Extension)" />
+                <MudTextField Label="@Localizer["Description"]" @bind-Value="_phone.Description" For="@(() => _phone.Description)" />
+                <MudSelect @bind-Value="@_phone.IsActive" Label="Is Active">
+                    <MudSelectItem Value="@(false)">False</MudSelectItem>
+                    <MudSelectItem Value="@(true)">True</MudSelectItem>
+                </MudSelect>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" DisableElevation="true" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" Href="@PageState.ReturnUrl" Class="mx-2">@Localizer["Cancel"]</MudButton>
+        </MudCardActions>
+    </MudCard>
 }
 

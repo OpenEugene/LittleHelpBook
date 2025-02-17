@@ -15,6 +15,9 @@ using OpenEugene.Module.LittleHelpBook.Services;
 using M = OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using static MudBlazor.CategoryTypes;
+using static MudBlazor.Colors;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 
 namespace OpenEugene.Module.PhoneNumber;
 
@@ -101,10 +104,15 @@ public partial class Index : ModuleBase
 
     private void Edit(M.PhoneNumber item)
     {
-        var parms = AddUrlParameters(_providerId, item.PhoneNumberId);
-        var url = EditUrl(PageState.Page.Path, ModuleState.ModuleId, "Edit", parms);
+        var url = this.ComposeUrl(
+            basePath: PageState.Page.Path, 
+            moduleId: ModuleState.ModuleId, 
+            action: "Edit", 
+            _providerId, item.PhoneNumberId );
+
         NavigationManager.NavigateTo(url);
     }
+
 
 
     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
