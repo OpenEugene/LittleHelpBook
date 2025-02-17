@@ -34,11 +34,6 @@
                 <MudText>@_model.HoursOfOperation</MudText>
             </MudField>
                
-            <MudField Label="Services" Variant="Variant.Outlined">
-                @if (_model.ProviderAttributes.Any()) {
-                    <ProviderAttribute Attributes="@_model.ProviderAttributes" > </ProviderAttribute>
-                }
-            </MudField>
                 
         </MudCardContent>
         <MudCardActions>
