@@ -16,6 +16,7 @@ using OpenEugene.Module.LittleHelpBook.Services;
 using M = OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using Oqtane.UI;
+using System.Collections;
 
 namespace OpenEugene.Module.PhoneNumber
 {
@@ -51,30 +52,46 @@ namespace OpenEugene.Module.PhoneNumber
         public override string UrlParametersTemplate => Routing.PhoneTemplate;
 
         protected override async Task OnInitializedAsync()
-	    {
-		    try
-		    {
+        {
+            try
+            {
                 var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
                 _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-	        }
-		    catch (Exception ex)
-		    {
-			    await logger.LogError(ex, "Error Loading PhoneNumber settings {Error}", ex.Message);
-			    AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
-		    }
-	    }
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error Loading PhoneNumber settings {Error}", ex.Message);
+                AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+            }
+        }
+	    
 
         protected override async Task OnParametersSetAsync()
         {
             if (!ShouldRender()) return;
-
+           
             try
             {
-                _phoneId = Int32.Parse(UrlParameters[Routing.PhoneId]);
-                (_phone, var code) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
-                if (!IsSuccessStatusCode(code))
+                if (string.IsNullOrEmpty(PageState.ReturnUrl))
                 {
-                    throw new HttpRequestException($"Error loading PhoneNumber. Code: {code}");
+                    throw new HttpRequestException("ReturnUrl is required");
+                }
+
+                if (PageState.Action == "Add")
+                {
+                    _phone = new ()
+                    {
+                        ProviderId = Int32.Parse(UrlParameters[Routing.ProviderId])
+                    };
+                }
+                else
+                {
+                    _phoneId = Int32.Parse(UrlParameters[Routing.PhoneId]);
+                    (_phone, var code) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
+                    if (!IsSuccessStatusCode(code))
+                    {
+                        throw new HttpRequestException($"Error loading PhoneNumber. Code: {code}");
+                    }
                 }
                 IsLoaded = true;
             }
@@ -104,26 +121,14 @@ namespace OpenEugene.Module.PhoneNumber
                     else
                     {
                         (_phone, var code) = await PhoneNumberService.UpdatePhoneNumberAsync(_phone);
-
-                        (var phoneLatest, var codeLatest) = await PhoneNumberService.GetPhoneNumberAsync(_phoneId);
-                        if (codeLatest is not HttpStatusCode.OK) {
-                            throw new HttpRequestException($"Error loading phone. Code: {codeLatest}");
-                        }
-                    
-                        // update values from the local version of LittleHelpBook
-                        phoneLatest.Number = _phone.Number;
-                        phoneLatest.AreaCode = _phone.AreaCode;
-                        phoneLatest.Extension = _phone.Extension;
-                        phoneLatest.Description = _phone.Description;
-
-                        // update Database with the latest version of LittleHelpBook
-                        (_phone, code) = await PhoneNumberService.UpdatePhoneNumberAsync(phoneLatest);
+               
                         if (code is not HttpStatusCode.OK) {
                             throw new HttpRequestException($"Error Updating {_phone}. Code: {code}");
                         }         
-                        await logger.LogInformation("LittleHelpBook Updated {phoneLatest}", phoneLatest);
+                        await logger.LogInformation("LittleHelpBook Updated {_phone}", _phone);
                     }
-                    NavigationManager.NavigateTo(NavigateUrl());
+
+                    NavigationManager.NavigateTo(PageState.ReturnUrl);
                 }
                 else
                 {

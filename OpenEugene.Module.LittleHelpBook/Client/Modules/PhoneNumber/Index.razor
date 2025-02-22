@@ -4,8 +4,8 @@
 <MudThemeProvider IsDarkMode=true />
 <MudPopoverProvider />
 
-@* Needed for dialogs 
-<MudDialogProvider />*@
+@* Needed for dialogs *@ 
+<MudDialogProvider />
 
 @* Needed for snackbars 
 <MudSnackbarProvider />*@
@@ -25,9 +25,14 @@ else
                     <PropertyColumn Property="x => x.Description" />
                     <AuthorizeView Roles="@(LhbRoleNames.Editors)" Context="authCon">
                         <Authorized>
-                            <TemplateColumn CellClass="d-flex justify-end">
+                            <TemplateColumn>
+                                <HeaderTemplate>
+                                    <MudStack row AlignItems="AlignItems.End">
+                                        <MudIconButton OnClick="@(m => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
+                                    </MudStack>                               
+                                </HeaderTemplate>
                                 <CellTemplate>
-                                    <MudStack row>
+                                    <MudStack row AlignItems="AlignItems.End">
                                         <MudIconButton OnClick="@(m => Edit(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
                                         <MudIconButton OnClick="@(m => Delete(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
                                     </MudStack>
@@ -41,9 +46,10 @@ else
     }
     else
     {
+        <p><em>No phone numbers found.</em></p>
         <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
             <Authorized>
-                <ActionLink Action="Add" Text="Add Phone Number" ResourceKey="Add" Parameters="@($"ProviderId={_providerId}")" />
+                <MudIconButton OnClick="@(m => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
             </Authorized>
         </AuthorizeView>
     }

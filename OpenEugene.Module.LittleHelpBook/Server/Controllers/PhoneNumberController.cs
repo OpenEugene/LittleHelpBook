@@ -68,12 +68,30 @@ public class PhoneNumberController : ModuleControllerBase
         else
         {
             HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
             item = null;
         }
 
         return item;
     }
+
+    // PUT api/<controller>/5
+    [HttpPut("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult<Models.PhoneNumber>> Put(int id, [FromBody] Models.PhoneNumber phone)
+    {
+        if (ModelState.IsValid && _LittleHelpBookRepository.GetPhoneNumber(phone.PhoneNumberId,false) != null)
+        {
+            phone = _LittleHelpBookRepository.UpdatePhoneNumber(phone);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Phone Updated {phone}", phone);
+            return Ok(phone);
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Update, "error updating phone {phone}", phone);
+            return BadRequest();
+        }
+    }
+
 
     // DELETE api/<controller>/5
     [HttpDelete("{id}")]

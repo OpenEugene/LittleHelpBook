@@ -25,7 +25,8 @@ public static class ModuleExtensions
 
         var parms = moduleBase.AddUrlParameters(parameters);
         var edit = moduleBase.EditUrl(basePath, moduleId, action, parms);
-        var returnUrl = moduleBase.NavigateUrl(basePath, $"{parameters[0]}").Replace("?","/!/"); // Conver to URL Parameters
+        var returnUrl = moduleBase.NavigateUrl(basePath, $"{parameters[0]}").Replace("?", "/!/"); // Conver to URL Parameters
         return $"{edit}?returnUrl={returnUrl}";
     }
+
 }

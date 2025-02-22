@@ -18,6 +18,7 @@ using static MudBlazor.CategoryTypes;
 using static MudBlazor.Colors;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using OpenEugene.Module.LittleHelpBook.Client.Extensions;
+using MudBlazor;
 
 namespace OpenEugene.Module.PhoneNumber;
 
@@ -30,7 +31,8 @@ public partial class Index : ModuleBase
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
-	
+    [Inject] public MudBlazor.IDialogService dialogService { get; set; }
+
     public override List<Resource> Resources => new List<Resource>()
     {
         new Resource { ResourceType = ResourceType.Stylesheet,  Url = "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" },
@@ -75,7 +77,7 @@ public partial class Index : ModuleBase
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error Loading Phone Numbers {Error}", ex.Message);
+            await logger.LogError(ex, "Error Loading Phone Numbers {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
         IsLoaded = true;
@@ -83,6 +85,13 @@ public partial class Index : ModuleBase
 
     private async Task Delete(M.PhoneNumber phone)
     {
+        var options = new DialogOptions { CloseOnEscapeKey = true, };
+        // confirm delete using MudBlazor Dialog
+        var confirm = await dialogService.ShowMessageBox("Delete?",
+            $"Delete Phone Number {phone.FullNumber}?",
+            "Yes",cancelText:"No",options:options);
+
+        if (!confirm.HasValue || !confirm.Value) return;
         try
         {
             var code = await PhoneNumberService.DeletePhoneNumberAsync(phone.PhoneNumberId);
@@ -113,6 +122,16 @@ public partial class Index : ModuleBase
         NavigationManager.NavigateTo(url);
     }
 
+    private void Add()
+    {
+        var url = this.ComposeUrl(
+            basePath: PageState.Page.Path,
+            moduleId: ModuleState.ModuleId,
+            action: "Add",
+            _providerId);
+
+        NavigationManager.NavigateTo(url);
+    }
 
 
     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 

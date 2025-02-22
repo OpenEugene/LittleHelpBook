@@ -41,7 +41,8 @@ namespace OpenEugene.Module.LittleHelpBook.Services
         public async Task<(Models.PhoneNumber, HttpStatusCode)> UpdatePhoneNumberAsync(Models.PhoneNumber item)
         {
             item.EnsureIAuditable();
-            (var data, var response) = await PutJsonWithResponseAsync<Models.PhoneNumber>($"{Apiurl}", item);
+            var url = $"{Apiurl}/{item.PhoneNumberId}";
+            (var data, var response) = await PutJsonWithResponseAsync<Models.PhoneNumber>($"{url}", item);
             return (data, response.StatusCode);
         }
 
