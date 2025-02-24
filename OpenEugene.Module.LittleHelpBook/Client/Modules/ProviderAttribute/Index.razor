@@ -17,6 +17,21 @@
 else
 {
     <MudField Label="Services" Variant="Variant.Outlined">
-        <ProviderAttribute Attributes="_list" />
+        <AuthorizeView Roles="@(LhbRoleNames.Editors)" >
+            <Authorized>
+                @foreach (var item in _list)
+                {
+                    <MudChip T="string" Color="Color.Primary" OnClose="@(()=>Delete(item.Attribute))">@item.Attribute.Name</MudChip>
+                }
+               <MudIconButton OnClick="@(() => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
+            </Authorized>
+            <NotAuthorized>
+                @foreach (var item in _list)
+                {
+                    <MudChip T="string" Color="Color.Primary">@item.Attribute.Name</MudChip>
+                }
+            </NotAuthorized>
+        </AuthorizeView>
+
     </MudField>
 }

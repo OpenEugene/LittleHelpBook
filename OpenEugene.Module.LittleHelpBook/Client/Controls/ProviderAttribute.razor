@@ -5,23 +5,19 @@
 
 @if (Attributes != null)
 {
-    <MudCard>
-        <MudCardContent>
-            @foreach(var item in Attributes){
-                @if (OnDelete.HasDelegate)
-                {
-                    <MudChip T="string" Color="Color.Primary" OnClose="@(()=>Closed(item))">@item.Attribute.Name</MudChip>
-                }
-                else
-                {
-                    <MudChip T="string" Color="Color.Primary">@item.Attribute.Name</MudChip>
-                }
-            }
-        </MudCardContent>
-        <MudCardActions>
+    <MudStack row Wrap="Wrap.Wrap">
+    @foreach(var item in Attributes){
+        @if (OnDelete.HasDelegate)
+        {
+            <MudChip T="string" Color="Color.Primary" OnClose="@(()=>Closed(item))">@item.Attribute.Name</MudChip>
+        }
+        else
+        {
+            <MudChip T="string" Color="Color.Primary">@item.Attribute.Name</MudChip>
+        }
+    }
 
-        </MudCardActions>
-    </MudCard>
+    </MudStack>
 }
 @code {
     [Parameter] public List<ProviderAttributeViewModel> Attributes { get; set; }

@@ -25,6 +25,4 @@ public partial class Attribute : ModelBase
     public string L10N { get; set; }
 
 
-
-
 }

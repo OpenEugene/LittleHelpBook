@@ -1,0 +1,58 @@
+@using Oqtane.Modules.Controls
+
+@namespace OpenEugene.Module.ProviderAttribute
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs
+<MudDialogProvider />*@
+
+@* Needed for snackbars
+<MudSnackbarProvider />*@
+
+@if (IsLoaded && _cats !=null)
+{
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudForm @ref="mudform" @bind-IsValid="@success">
+                <MudField Label="Pick Catagry" Variant="Variant.Outlined">
+                    <MudChipSet T="@(int?)" >
+                        @foreach (var cat in _cats)
+                        {
+                            <MudChip Text="@cat.Name" Value="@cat.AttributeId" 
+                                OnClick="@(()=>OnCategoryChange(cat.CategoryId))"></MudChip>
+                        }
+                    </MudChipSet>
+                </MudField>
+                <MudField Label="Pick Sub Categories" Variant="Variant.Outlined">
+                    <MudChipSet T="@(int)"
+                    @bind-SelectedValues="_selectedSubCatIds"
+                    CheckMark="true"
+                    SelectionMode="SelectionMode.MultiSelection">
+                        @if (_subCats != null)
+                        {
+                            @foreach (var scat in _subCats)
+                            {
+                                <MudChip Text="@scat.Name" Value="@scat.AttributeId"></MudChip>
+                            }
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.body2">Pick a Catagory</MudText>
+                        }
+                    </MudChipSet>
+                </MudField>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" DisableElevation="true" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" Href="@PageState.ReturnUrl" Class="mx-2">@Localizer["Cancel"]</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+

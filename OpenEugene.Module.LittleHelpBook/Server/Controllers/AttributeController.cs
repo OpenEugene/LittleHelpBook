@@ -62,5 +62,37 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
         }
     }
 
+    // POST api/<controller>
+    [HttpPost("providerattributes")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult<List<Models.ProviderAttribute>>> Post([FromBody] List<Models.ProviderAttribute> list)
+    {
+        var result = new List<Models.ProviderAttribute>();
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                foreach (var item in list)
+                {
+                    var newItem = _LittleHelpBookRepository.AddProviderAttribute(item);
+                    result.Add(newItem);
+                    _logger.Log(LogLevel.Information, this, LogFunction.Create, "Provider Attribute Added {item}", item);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Failed attribute Add Attempt {Message} ", ex.Message);
+                return StatusCode(500);
+            }
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Create, "Bad model state for add attributes {list}",list);
+            return BadRequest();
+        }
+        return Ok(result);
+    }
+
 }
 

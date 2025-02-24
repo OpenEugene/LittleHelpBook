@@ -28,13 +28,27 @@ namespace OpenEugene.Module.LittleHelpBook.Services
         }
 
 
-        public async Task<Models.Attribute> AddAttributeAsync(Models.Attribute item)
+        public async Task<(Models.Attribute, HttpStatusCode)> AddAttributeAsync(Models.Attribute item)
         {
             item.EnsureIAuditable();
-            return await PostJsonAsync<Models.Attribute>($"{Apiurl}", item);
+            var url = $"{Apiurl}";
+            (var data, var response) = await PostJsonWithResponseAsync<Models.Attribute>(url,item);
+            return (data, response.StatusCode);
         }
 
-        public async Task DeleteAddressAsync(int id)
+        public async Task<(List<Models.ProviderAttribute>, HttpStatusCode)> AddAttributesAsync(List<Models.ProviderAttribute> items)
+        {
+            foreach (var item in items)
+            {
+                item.EnsureIAuditable();
+            }
+            var url = $"{Apiurl}providerattributes"; // plural
+            (var data, var response) = await PostJsonWithResponseAsync<List<Models.ProviderAttribute>>(url, items);
+            return (data, response.StatusCode);
+        }
+
+
+        public async Task DeleteAttributeAsync(int id)
         {
             await DeleteAsync($"{Apiurl}/{id}");
         }

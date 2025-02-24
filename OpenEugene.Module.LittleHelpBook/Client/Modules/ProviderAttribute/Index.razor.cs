@@ -15,6 +15,7 @@ using OpenEugene.Module.LittleHelpBook.Services;
 using M= OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using OpenEugene.Module.LittleHelpBook.ViewModels;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 
 namespace OpenEugene.Module.ProviderAttribute;
 
@@ -23,6 +24,7 @@ public partial class Index : ModuleBase
     List<ProviderAttributeViewModel> _list;
 		
     [Inject] public ProviderAttributeService ProviderAttributeService { get; set; }
+    [Inject] public AttributeService AttributeService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
@@ -75,8 +77,23 @@ public partial class Index : ModuleBase
         }
     }
 
-   
-     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
+    private async Task Delete(M.Attribute attribute) {
+
+        await ProviderAttributeService.DeleteAttributeAsync(attribute.AttributeId);
+    }
+
+    private async Task Add()
+    {
+        var url = this.ComposeUrl(
+           basePath: PageState.Page.Path,
+           moduleId: ModuleState.ModuleId,
+           action: "Add",
+           _providerId);
+
+        NavigationManager.NavigateTo(url);
+    }
+
+    static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
         return (int)statusCode >= 200 && (int)statusCode <= 299; 
     }
 }

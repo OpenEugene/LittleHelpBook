@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using OpenEugene.Module.LittleHelpBook.ViewModels;
 using Oqtane.Models;
 using Oqtane.Modules;
 using Oqtane.Services;
@@ -11,23 +13,21 @@ using Oqtane.Shared;
 
 namespace OpenEugene.Module.LittleHelpBook.Services
 {
-    public class AttributeService : ServiceBase, IService
+    public class AttributeService : ResponseServiceBase, IService
     {
-        public AttributeService(HttpClient http, SiteState siteState) : base(http, siteState) { }
+        public AttributeService(IHttpClientFactory http, SiteState siteState) : base(http, siteState) { }
 
         private string Apiurl => CreateApiUrl("Attribute");
 
-        public async Task<List<Models.Attribute>> GetAttributesAsync()
+        //mew pattern
+        public async Task<(List<Models.Attribute>, HttpStatusCode)> GetAttributesAsync()
         {
-            List<Models.Attribute> list = await GetJsonAsync<List<Models.Attribute>>($"{Apiurl}");
-            if (list != null)
-            {
-                return list.OrderBy(item => item.Name).ToList();
-            }
-            return null;
+            var url = $"{Apiurl}";
+            (var data, var response) = await GetJsonWithResponseAsync<List<Models.Attribute>>(url);
+            return (data, response.StatusCode);
         }
 
-
+        // old pattern
         public async Task<Models.Attribute> AddAttributeAsync(Models.Attribute item)
         {
             item.EnsureIAuditable();

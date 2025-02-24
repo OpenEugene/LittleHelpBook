@@ -56,7 +56,7 @@
     protected override async Task OnInitializedAsync()
     {
         await ReadData();
-        _allAttributes = await AttributeService.GetAttributesAsync();
+        (_allAttributes,var code) = await AttributeService.GetAttributesAsync();
         ResetDropDowns();
     }
 
