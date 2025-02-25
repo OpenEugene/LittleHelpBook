@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System;
 using OpenEugene.Module.LittleHelpBook.ViewModels;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Linq;
 
 namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
@@ -36,7 +37,7 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
             try
             {
                 var list = _LittleHelpBookRepository.GetSubCategories();
-                return list;
+                return list.OrderBy(i => i.Name);
             }
             catch (System.Exception ex)
             {
@@ -47,14 +48,14 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         }
 
-    [HttpGet("category/{id}")]
+    [HttpGet("/category/{id}")]
     [Authorize(Roles = RoleNames.Registered)]
-    public async Task<ActionResult<SubCategory>> GetByCategory(int id)
+    public async Task<ActionResult<List<SubCategory>>> GetByCategory(int id)
     {
         try
         {
             var data = _LittleHelpBookRepository.GetSubCategoriesByCategory(id);
-            return Ok(data);
+            return Ok(data.OrderBy(i=>i.Name));
         }
         catch (Exception ex)
         {

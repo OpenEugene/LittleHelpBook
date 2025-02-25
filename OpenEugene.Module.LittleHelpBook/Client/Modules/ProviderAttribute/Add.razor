@@ -12,41 +12,50 @@
 @* Needed for snackbars
 <MudSnackbarProvider />*@
 
-@if (IsLoaded && _cats !=null)
+@if (IsLoaded)
 {
     <MudCard>
-        <MudCardHeader>
-            <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
-        </MudCardHeader>
         <MudCardContent>
             <MudForm @ref="mudform" @bind-IsValid="@success">
-                <MudField Label="Pick Catagry" Variant="Variant.Outlined">
-                    <MudChipSet T="@(int?)" >
-                        @foreach (var cat in _cats)
-                        {
-                            <MudChip Text="@cat.Name" Value="@cat.AttributeId" 
-                                OnClick="@(()=>OnCategoryChange(cat.CategoryId))"></MudChip>
-                        }
-                    </MudChipSet>
-                </MudField>
-                <MudField Label="Pick Sub Categories" Variant="Variant.Outlined">
-                    <MudChipSet T="@(int)"
-                    @bind-SelectedValues="_selectedSubCatIds"
-                    CheckMark="true"
-                    SelectionMode="SelectionMode.MultiSelection">
-                        @if (_subCats != null)
-                        {
-                            @foreach (var scat in _subCats)
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Select Category</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudChipSet T="@(int?)">
+                            <MudStack Row Wrap="Wrap.Wrap">
+                            @foreach (var cat in _cats)
                             {
-                                <MudChip Text="@scat.Name" Value="@scat.AttributeId"></MudChip>
+                                    <MudChip Variant="Variant.Outlined" Text="@cat.Name" Value="@cat.AttributeId"
+                                         OnClick="@(()=>OnCategoryChange(cat.CategoryId))"></MudChip>
                             }
-                        }
-                        else
-                        {
-                            <MudText Typo="Typo.body2">Pick a Catagory</MudText>
-                        }
-                    </MudChipSet>
-                </MudField>
+                            </MudStack>
+                        </MudChipSet>
+                    </MudCardContent>
+                </MudCard>
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h4">Select Sub-Catagories</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudChipSet T="@(int)"
+                                    @bind-SelectedValues="_selectedSubCatIds"
+                                    CheckMark="true"
+                                    SelectionMode="SelectionMode.MultiSelection">
+                            @if (_subCats != null)
+                            {
+                                @foreach (var scat in _subCats)
+                                {
+                                    <MudChip Variant="Variant.Outlined" Text="@scat.Name" Value="@scat.AttributeId"></MudChip>
+                                }
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2">Pick a Catagory above</MudText>
+                            }
+                        </MudChipSet>
+                    </MudCardContent>
+                </MudCard>
             </MudForm>
         </MudCardContent>
         <MudCardActions>

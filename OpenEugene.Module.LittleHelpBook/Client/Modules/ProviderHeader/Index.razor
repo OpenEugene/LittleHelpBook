@@ -15,12 +15,9 @@
 
     <MudCard>
         <MudCardHeader>
-            <MudText Typo="Typo.h6">@Localizer["Title"]</MudText>
+            <MudText Typo="Typo.h4">@_model.Name</MudText>
         </MudCardHeader>
         <MudCardContent>
-            <MudField Label="@Localizer["Name"]">
-                <MudText>@_model.Name</MudText>
-            </MudField>
             <MudField Label="@Localizer["Description"]">
                 <MudText>@_model.Description</MudText>
             </MudField>
@@ -33,8 +30,6 @@
             <MudField Label="@Localizer["Hours of Operation"]">
                 <MudText>@_model.HoursOfOperation</MudText>
             </MudField>
-
-
         </MudCardContent>
         <MudCardActions>
             <MudButton Color="Color.Secondary" OnClick="Back">@Localizer["Back"]</MudButton>

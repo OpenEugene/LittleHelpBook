@@ -50,7 +50,7 @@ namespace OpenEugene.Module.ProviderAttribute
 
 		public override string Actions => "Add";
 
-		public override string Title => "Service";
+		public override string Title => "Add Service";
 
         public override List<Resource> Resources => new List<Resource>()
         {

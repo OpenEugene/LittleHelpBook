@@ -16,22 +16,30 @@
 }
 else
 {
-    <MudField Label="Services" Variant="Variant.Outlined">
-        <AuthorizeView Roles="@(LhbRoleNames.Editors)" >
-            <Authorized>
-                @foreach (var item in _list)
-                {
-                    <MudChip T="string" Color="Color.Primary" OnClose="@(()=>Delete(item.Attribute))">@item.Attribute.Name</MudChip>
-                }
-               <MudIconButton OnClick="@(() => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
-            </Authorized>
-            <NotAuthorized>
-                @foreach (var item in _list)
-                {
-                    <MudChip T="string" Color="Color.Primary">@item.Attribute.Name</MudChip>
-                }
-            </NotAuthorized>
-        </AuthorizeView>
-
-    </MudField>
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">Services</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <AuthorizeView Roles="@(LhbRoleNames.Editors)">
+                <Authorized>
+                    <MudStack Row Wrap="Wrap.Wrap">
+                        @foreach (var item in _list)
+                        {
+                            <MudChip Variant="@(item.Attribute.ParentAttributeId==null ? Variant.Filled : Variant.Outlined)" T="string" OnClose="@(()=>Delete(item.Attribute))">@item.Attribute.Name</MudChip>
+                        }
+                    </MudStack>
+                    <MudIconButton OnClick="@(() => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
+                </Authorized>
+                <NotAuthorized>
+                    <MudStack Row Wrap="Wrap.Wrap">                     
+                        @foreach (var item in _list)
+                        {
+                            <MudChip Variant="@(item.Attribute.ParentAttributeId==null ? Variant.Filled : Variant.Outlined)" T="string">@item.Attribute.Name</MudChip>
+                        }
+                    </MudStack>
+                </NotAuthorized>
+            </AuthorizeView>
+        </MudCardContent>
+    </MudCard>
 }

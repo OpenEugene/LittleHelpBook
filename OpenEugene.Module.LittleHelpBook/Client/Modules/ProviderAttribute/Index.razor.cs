@@ -39,6 +39,7 @@ public partial class Index : ModuleBase
     };	
     private bool IsLoaded;
     private SettingsViewModel _settingsVM;
+    public override string Title => "Services";
 
     private int _providerId = -1;
 

@@ -35,7 +35,7 @@ public class CategoryController : ModuleControllerBase
         try
         {
             var list = _LittleHelpBookRepository.GetCategories();
-            return list.ToList();
+            return list.OrderBy(i=>i.Name);
         }
         catch (System.Exception ex)
         {

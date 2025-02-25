@@ -38,6 +38,8 @@ public partial class Index : ModuleBase
     };	
     private bool IsLoaded;
     private SettingsViewModel _settingsVM;
+    public override string Title => "Provider";
+
 
     private int _providerId = -1;
 

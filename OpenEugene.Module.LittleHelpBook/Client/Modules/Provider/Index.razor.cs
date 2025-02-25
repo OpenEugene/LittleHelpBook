@@ -40,6 +40,8 @@ public partial class Index : ModuleBase
     };	
     private bool IsLoaded;
     private SettingsViewModel _settingsVM;
+    public override string Title => "Provider";
+
     public override string UrlParametersTemplate => Routing.ProviderTemplate;
 
 
