@@ -132,33 +132,7 @@ namespace OpenEugene.Module.LittleHelpBook.Repository
             return list.ToList();
         }
 
-        public ProviderAttribute GetProviderAttribute(int id, bool tracking = false)
-        {
-            using var db = _factory.CreateDbContext();
-            // get a list of attributes for a provider
-            var item = db.ProviderAttribute.Find(id);
-
-            return item;
-        }
-
-        public ProviderAttribute AddProviderAttribute(ProviderAttribute item)
-        {
-            using var db = _factory.CreateDbContext();
-            db.ProviderAttribute.Add(item);
-            db.SaveChanges();
-            return item;
-        }
-
-        public void DeleteProviderAttribute(int providerAttributeId)
-        {
-            using var db = _factory.CreateDbContext();
-            var item = db.ProviderAttribute.Find(providerAttributeId);
-
-            if (item == null) return;
-            db.ProviderAttribute.Remove(item);
-            db.SaveChanges();
-
-        }
+ 
 
     }
 }

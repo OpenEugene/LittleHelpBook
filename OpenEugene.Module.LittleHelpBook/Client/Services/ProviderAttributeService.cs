@@ -52,5 +52,10 @@ namespace OpenEugene.Module.LittleHelpBook.Services
         {
             await DeleteAsync($"{Apiurl}/{id}");
         }
+
+        public async Task DeleteProviderAttributeAsync(int id)
+        {
+            await DeleteAsync($"{Apiurl}/providerattribute/{id}");
+        }
     }
 }

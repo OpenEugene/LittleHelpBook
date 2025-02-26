@@ -26,7 +26,12 @@ else
                     <MudStack Row Wrap="Wrap.Wrap">
                         @foreach (var item in _list)
                         {
-                            <MudChip Color="Color.Default" Variant="@(item.Attribute.ParentAttributeId==null ? Variant.Filled : Variant.Outlined)" T="string" OnClose="@(()=>Delete(item.Attribute))">@item.Attribute.Name</MudChip>
+                            <MudChip Color="Color.Default" 
+                                Variant="@(item.Attribute.ParentAttributeId==null ? Variant.Filled : Variant.Outlined)" 
+                                T="string" 
+                                OnClose="@(()=>Delete(item.Attribute))">
+                                    @item.Attribute.Name
+                            </MudChip>
                         }
                     </MudStack>
                     <MudIconButton OnClick="@(() => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />

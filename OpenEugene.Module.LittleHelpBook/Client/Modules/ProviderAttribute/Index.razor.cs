@@ -55,7 +55,7 @@ public partial class Index : ModuleBase
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading LittleHelpBook {Error}", ex.Message);
+            await logger.LogError(ex, "Error Loading Attributes Settings {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
@@ -68,19 +68,35 @@ public partial class Index : ModuleBase
 
             _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
 
+            await GetAttributes();
+
+            IsLoaded = true;
+        }
+    }
+
+    private async Task GetAttributes()
+    {
+        try
+        {
             (_list, var code) = await ProviderAttributeService.GetAttributesByProviderAsync(_providerId);
             if (!IsSuccessStatusCode(code))
             {
-                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+                throw new HttpRequestException($"Error loading attributes. Code: {code}");
             }
-
-            IsLoaded = true;
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading attributes {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
 
     private async Task Delete(M.Attribute attribute) {
 
         await ProviderAttributeService.DeleteAttributeAsync(attribute.AttributeId);
+        await GetAttributes();
+        StateHasChanged();
+
     }
 
     private async Task Add()

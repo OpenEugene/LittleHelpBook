@@ -103,5 +103,40 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
         return Ok(result);
     }
 
+    // DELETE api/<controller>/5
+    [HttpDelete("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var data = _LittleHelpBookRepository.GetAttribute(id);
+        if (data is null)
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Failed Attribute Delete Attempt {id}", id);
+            return NotFound();
+        }
+
+        await _LittleHelpBookRepository.DeleteAttributeAsync(id);
+        _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Attribute Deleted {id}", id);
+        return Ok();
+
+    }
+    // DELETE api/<controller>/5
+    [HttpDelete("prividerattribute/{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult> DeleteProviderAttribute(int id)
+    {
+        var data = _LittleHelpBookRepository.GetProviderAttribute(id);
+        if (data is null)
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Failed LittleHelpBook Delete Attempt {LittleHelpBookId}", id);
+            return NotFound();
+        }
+
+        _LittleHelpBookRepository.DeleteProviderAttribute(id);
+        _logger.Log(LogLevel.Information, this, LogFunction.Delete, "LittleHelpBook Deleted {LittleHelpBookId}", id);
+        return Ok();
+
+    }
+
 }
 
