@@ -42,7 +42,7 @@ namespace OpenEugene.Module.LittleHelpBook.Services
             {
                 item.EnsureIAuditable();
             }
-            var url = $"{Apiurl}providerattributes"; // plural
+            var url = $"{Apiurl}/providerattributes"; // plural
             (var data, var response) = await PostJsonWithResponseAsync<List<Models.ProviderAttribute>>(url, items);
             return (data, response.StatusCode);
         }

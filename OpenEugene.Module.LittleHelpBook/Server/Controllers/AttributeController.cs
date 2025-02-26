@@ -14,6 +14,7 @@ using OpenEugene.Module.LittleHelpBook.Repository;
 using System.Threading.Tasks;
 using System;
 using OpenEugene.Module.LittleHelpBook.ViewModels;
+using System.Linq;
 
 namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
@@ -73,8 +74,16 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
         {
             try
             {
+                // get the existing attributes for this provider
+                var attribs = _LittleHelpBookRepository.GetProviderAttributesByProviderId(list.First().ProviderId);
+
                 foreach (var item in list)
                 {
+                    // don't add dupes
+                    if (attribs.Any(a=>a.ProviderAttributeId==item.ProviderAttributeId))
+                    {
+                        continue;
+                    }
                     var newItem = _LittleHelpBookRepository.AddProviderAttribute(item);
                     result.Add(newItem);
                     _logger.Log(LogLevel.Information, this, LogFunction.Create, "Provider Attribute Added {item}", item);

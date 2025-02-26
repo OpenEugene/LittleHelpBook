@@ -21,6 +21,8 @@ using OpenEugene.Module.LittleHelpBook.ViewModels;
 using static MudBlazor.CategoryTypes;
 using System.ComponentModel.Design;
 using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Components.Web;
+using System.Runtime.CompilerServices;
 
 namespace OpenEugene.Module.ProviderAttribute
 {
@@ -44,7 +46,6 @@ namespace OpenEugene.Module.ProviderAttribute
         private List<M.SubCategory> _subCats;
         private int? _selectedCatId;
         private IReadOnlyCollection<int> _selectedSubCatIds;
-
 
         public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
 
@@ -101,11 +102,13 @@ namespace OpenEugene.Module.ProviderAttribute
             }
         }
 
-        protected async Task OnCategoryChange(int? catId)
+      
+
+        protected async Task OnCategoryChange(int? id)
         {
             try
             {
-                _selectedCatId = catId;
+                _selectedCatId = id;
                 (_subCats, var code) = await SubCategoryService.GetSubCategoriesByCategoryAsync(_selectedCatId.Value);
                 if (!IsSuccessStatusCode(code))
                 {
@@ -117,6 +120,7 @@ namespace OpenEugene.Module.ProviderAttribute
                 await logger.LogError(ex, "Error Loading SubCategories {Error}", ex.Message);
                 AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
             }
+           
         }
 
 
@@ -135,7 +139,7 @@ namespace OpenEugene.Module.ProviderAttribute
                         _items.Add(new M.ProviderAttribute
                         {
                             ProviderId = _providerid,
-                            ProviderAttributeId = _item.ProviderAttributeId,
+                            AttributeId = subCatId,
                         });
                     }     
                   

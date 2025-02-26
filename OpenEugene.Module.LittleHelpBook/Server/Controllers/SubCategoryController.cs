@@ -48,7 +48,7 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         }
 
-    [HttpGet("/category/{id}")]
+    [HttpGet("category/{id}")]
     [Authorize(Roles = RoleNames.Registered)]
     public async Task<ActionResult<List<SubCategory>>> GetByCategory(int id)
     {

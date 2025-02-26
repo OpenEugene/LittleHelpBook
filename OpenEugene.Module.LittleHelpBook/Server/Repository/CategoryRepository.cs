@@ -18,7 +18,7 @@ namespace OpenEugene.Module.LittleHelpBook.Repository
             using var db = _factory.CreateDbContext();
 
             var list = from a in db.Attribute.AsNoTracking()
-                       where a.ParentAttributeId != null
+                       where a.ParentAttributeId == null
                        select new Category()
                        {
                            AttributeId = a.AttributeId,

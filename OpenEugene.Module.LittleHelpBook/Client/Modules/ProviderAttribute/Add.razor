@@ -22,31 +22,42 @@
                         <MudText Typo="Typo.h6">Select Category</MudText>
                     </MudCardHeader>
                     <MudCardContent>
-                        <MudChipSet T="@(int?)">
+                        <MudChipSet 
+                            T="@(int?)" 
+                            SelectionMode="SelectionMode.SingleSelection"
+                            @bind-SelectedValue="_selectedCatId"
+                            CheckMark="true">
                             <MudStack Row Wrap="Wrap.Wrap">
-                            @foreach (var cat in _cats)
-                            {
-                                    <MudChip Variant="Variant.Outlined" Text="@cat.Name" Value="@cat.AttributeId"
-                                         OnClick="@(()=>OnCategoryChange(cat.CategoryId))"></MudChip>
-                            }
+                                @foreach (var cat in _cats)
+                                {
+                                    <MudChip Variant="Variant.Outlined" 
+                                        Text="@cat.Name"
+                                        Value="@cat.AttributeId"
+                                             OnClick="@(()=>OnCategoryChange(cat.CategoryId))"></MudChip>
+                                }
                             </MudStack>
                         </MudChipSet>
                     </MudCardContent>
                 </MudCard>
                 <MudCard>
                     <MudCardHeader>
-                        <MudText Typo="Typo.h4">Select Sub-Catagories</MudText>
+                        <MudText Typo="Typo.h6">Select Sub-Catagories</MudText>
                     </MudCardHeader>
                     <MudCardContent>
-                        <MudChipSet T="@(int)"
-                                    @bind-SelectedValues="_selectedSubCatIds"
-                                    CheckMark="true"
-                                    SelectionMode="SelectionMode.MultiSelection">
+                        <MudChipSet 
+                            T="@(int)"
+                            @bind-SelectedValues="_selectedSubCatIds"
+                            CheckMark="true"
+                            SelectionMode="SelectionMode.MultiSelection">
                             @if (_subCats != null)
                             {
                                 @foreach (var scat in _subCats)
                                 {
-                                    <MudChip Variant="Variant.Outlined" Text="@scat.Name" Value="@scat.AttributeId"></MudChip>
+                                    <MudChip 
+                                        Variant="Variant.Outlined" 
+                                        Text="@scat.Name" 
+                                        Value="@scat.AttributeId">
+                        </MudChip>
                                 }
                             }
                             else
