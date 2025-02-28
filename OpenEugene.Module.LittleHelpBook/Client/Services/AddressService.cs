@@ -40,6 +40,13 @@ namespace OpenEugene.Module.LittleHelpBook.Services
             return (data, response.StatusCode);
         }
 
+        public async Task<(Models.Address, HttpStatusCode)> UpdateAddressAsync(Models.Address item)
+        {
+            item.EnsureIAuditable();
+            var url = $"{Apiurl}/{item.AddressId}";
+            (var data, var response) = await PutJsonWithResponseAsync<Models.Address>($"{url}", item);
+            return (data, response.StatusCode);
+        }
 
         public async Task<HttpStatusCode> DeleteAddressAsync(int id)
         {

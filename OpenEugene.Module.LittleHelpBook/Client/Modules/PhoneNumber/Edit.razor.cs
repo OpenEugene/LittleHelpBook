@@ -15,6 +15,7 @@ using Oqtane.Services;
 using OpenEugene.Module.LittleHelpBook.Services;
 using M = OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 using Oqtane.UI;
 using System.Collections;
 

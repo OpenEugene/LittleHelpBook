@@ -16,6 +16,7 @@ using M= OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using OpenEugene.Module.LittleHelpBook.ViewModels;
 using Oqtane.UI;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 
 namespace OpenEugene.Module.ProviderHeader;
 
@@ -82,8 +83,19 @@ public partial class Index : ModuleBase
         NavigationManager.NavigateTo(Routing.ProviderList);
     }
 
-   
-     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
+    private void Edit()
+    {
+        var url = this.ComposeUrl(
+            basePath: PageState.Page.Path,
+            moduleId: ModuleState.ModuleId,
+            action: "Edit",
+            _providerId);
+
+        NavigationManager.NavigateTo(url);
+    }
+
+
+    static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
         return (int)statusCode >= 200 && (int)statusCode <= 299; 
     }
 }

@@ -1,0 +1,32 @@
+@using Oqtane.Modules.Controls
+
+@namespace OpenEugene.Module.ProviderHeader
+@inherits ModuleBase
+@* Required *@
+<MudThemeProvider IsDarkMode=true />
+<MudPopoverProvider />
+
+@* Needed for dialogs
+<MudDialogProvider />*@
+
+@* Needed for snackbars
+<MudSnackbarProvider />*@
+
+@if (IsLoaded)
+{
+    <MudCard  Outlined="true" >
+        <MudCardContent>
+             <MudForm @ref="mudform" @bind-IsValid="@success">
+                <MudTextField @bind-Value="_item.Description" Label="@Localizer["Description"]" Variant="Variant.Filled" />
+                <MudTextField @bind-Value="_item.WebAddress" Label="@Localizer["Web Address"]" Variant="Variant.Filled" />
+                <MudTextField @bind-Value="_item.EmailAddress" Label="@Localizer["Email Address"]" Variant="Variant.Filled" />
+                <MudTextField @bind-Value="_item.HoursOfOperation" Label="@Localizer["Hours of Operation"]" Variant="Variant.Filled" />
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton   Variant="Variant.Filled" Color="Color.Success" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
+            <MudButton   Variant="Variant.Filled" Color="Color.Secondary" Href="@PageState.ReturnUrl" >@Localizer["Cancel"]</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+

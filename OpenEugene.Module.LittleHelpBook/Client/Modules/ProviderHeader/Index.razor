@@ -13,26 +13,27 @@
 @if (_model != null)
 {
 
-    <MudCard>
+    <MudCard Outlined="true">
         <MudCardHeader>
             <MudText Typo="Typo.h4">@_model.Name</MudText>
         </MudCardHeader>
         <MudCardContent>
-            <MudField Label="@Localizer["Description"]">
+            <MudField Label="@Localizer["Description"]" Variant="Variant.Filled">
                 <MudText>@_model.Description</MudText>
             </MudField>
-            <MudField Label="@Localizer["Web Address"]">
+            <MudField Label="@Localizer["Web Address"]" Variant="Variant.Filled">
                 <MudText>@_model.WebAddress</MudText>
             </MudField>
-            <MudField Label="@Localizer["Email Address"]">
+            <MudField Label="@Localizer["Email Address"]" Variant="Variant.Filled">
                 <MudText>@_model.EmailAddress</MudText>
             </MudField>
-            <MudField Label="@Localizer["Hours of Operation"]">
+            <MudField Label="@Localizer["Hours of Operation"]" Variant="Variant.Filled">
                 <MudText>@_model.HoursOfOperation</MudText>
             </MudField>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Color="Color.Secondary" OnClick="Back">@Localizer["Back"]</MudButton>
+            <MudButton Color="Color.Primary"  OnClick="Edit">@Localizer["Edit"]</MudButton>
+            <MudButton Color="Color.Secondary"  OnClick="Back">@Localizer["Back"]</MudButton>
         </MudCardActions>
     </MudCard>
 

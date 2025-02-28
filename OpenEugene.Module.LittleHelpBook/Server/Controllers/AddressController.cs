@@ -43,20 +43,38 @@ public class AddressController : ModuleControllerBase
 
     // POST api/<controller>
     [HttpPost]
-    public Address Post([FromBody] Address item)
+    public async Task<ActionResult<Models.Address>> Post([FromBody] Models.Address item)
     {
         if (ModelState.IsValid )
         {
             item = _LittleHelpBookRepository.AddAddress(item);
             _logger.Log(LogLevel.Information, this, LogFunction.Create, "Address Added {item}", item);
+            return Ok(item);
         }
         else
         {
-            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                
-            item = null;
+            _logger.Log(LogLevel.Error, this, LogFunction.Update, "error updating Address {item}", item);
+            return BadRequest();
         }
-        return item;
+      
+    }
+
+    // PUT api/<controller>/5
+    [HttpPut("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public async Task<ActionResult<Models.Address>> Put(int id, [FromBody] Models.Address item)
+    {
+        if (ModelState.IsValid && _LittleHelpBookRepository.GetPhoneNumber(item.AddressId, false) != null)
+        {
+            item = _LittleHelpBookRepository.UpdateAddress(item);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Address Updated {item}", item);
+            return Ok(item);
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Update, "error updating Address {item}", item);
+            return BadRequest();
+        }
     }
 
     // DELETE api/<controller>/5

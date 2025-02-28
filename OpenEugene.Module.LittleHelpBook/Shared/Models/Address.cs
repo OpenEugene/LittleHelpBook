@@ -45,6 +45,6 @@ public partial class Address : ModelBase
     [Required]
     public bool IsActive { get; set; }
 
-   
+    public string CityStateZip => $"{City} {State} {PostalCode}";
 
 }

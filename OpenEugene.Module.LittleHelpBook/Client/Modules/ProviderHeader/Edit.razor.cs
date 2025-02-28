@@ -18,12 +18,12 @@ using OpenEugene.Module.LittleHelpBook.Services;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 
 
-namespace OpenEugene.Module.Address
+namespace OpenEugene.Module.ProviderHeader
 {
     public partial class Edit: ModuleBase
     {
-		[Inject] public AddressService AddressService { get; set; }
-		[Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public ProviderService ProviderService { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
 		[Inject] public IStringLocalizer<Edit> Localizer { get; set; }		
         [Inject] public ISettingService SettingService { get; set; }
 
@@ -32,17 +32,14 @@ namespace OpenEugene.Module.Address
         private bool success = false;
         private SettingsViewModel _settingsVM;
         private bool IsLoaded = false;
-        private M.Address _item = new();
+        private M.Provider _item = new();
         private int _id = -1;
-        private int _providerId = -1;
 
-
-        public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+		public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
 
 		public override string Actions => "Add,Edit";
-
-		public override string Title => "Manage Address";
-        public override string UrlParametersTemplate => Routing.AddressTemplate;
+        public override string UrlParametersTemplate => Routing.ProviderTemplate;
+        public override string Title => "Provider";
 
         public override List<Resource> Resources => new List<Resource>()
         {
@@ -71,11 +68,10 @@ namespace OpenEugene.Module.Address
         {
             try
             {
-                _providerId = Int32.Parse(UrlParameters[Routing.ProviderId]);
                 if (PageState.Action == "Edit")
                 {
-                    _id = Int32.Parse(UrlParameters[Routing.AddressId]);
-                    (_item, var code) = await AddressService.GetAddressAsync(_id);
+                    _id = Int32.Parse(UrlParameters[Routing.ProviderId]);
+                    (_item, var code) = await ProviderService.GetProviderAsync(_id);
                     if (!this.IsSuccessStatusCode(code))
                     {
                         throw new HttpRequestException($"Error loading Address. Code: {code}");
@@ -102,8 +98,7 @@ namespace OpenEugene.Module.Address
 
                     if (PageState.Action == "Add")
                     {
-                        _item.ProviderId = _providerId;
-                        (_item, var code) = await AddressService.AddAddressAsync(_item);
+                        (_item, var code) = await ProviderService.AddProviderAsync(_item);
                         if (code is not HttpStatusCode.OK)
                         {
                             throw new HttpRequestException($"Error Adding {_item}. Code: {code}");
@@ -112,8 +107,7 @@ namespace OpenEugene.Module.Address
                     }
                     else
                     {
-                        (_item, var code) = await AddressService.UpdateAddressAsync(_item);
-
+                        (_item, var code) = await ProviderService.UpdateProviderAsync(_item);
                         if (code is not HttpStatusCode.OK)
                         {
                             throw new HttpRequestException($"Error Updating {_item}. Code: {_item}");

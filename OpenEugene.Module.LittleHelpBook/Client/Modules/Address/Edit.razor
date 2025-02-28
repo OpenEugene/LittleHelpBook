@@ -14,6 +14,26 @@
 
 @if (IsLoaded)
 {
-    <AddressEdit Addr="_item" />
+    <MudCard Outlined="true">
+        <MudCardContent>
+             <MudForm @ref="mudform" @bind-IsValid="@success">
+                <MudTextField Label="@Localizer["Address"]" @bind-Value="_item.Address1" For="@(() => _item.Address1)" />
+                <MudTextField Label="@Localizer["Address2"]" @bind-Value="_item.Address2" For="@(() => _item.Address2)" />
+                <MudTextField Label="@Localizer["Address3"]" @bind-Value="_item.Address3" For="@(() => _item.Address3)" />
+
+                <MudTextField Label="@Localizer["City"]" @bind-Value="_item.City" For="@(() => _item.City)" />
+                <MudTextField Label="@Localizer["State"]" @bind-Value="_item.State" For="@(() => _item.State)" />
+                <MudTextField Label="@Localizer["PostalCode"]" @bind-Value="_item.PostalCode" For="@(() => _item.PostalCode)" />
+                <MudField >
+                    <MudSwitch Label="Has Wheelchair Support" @bind-Value="_item.HasWheelchairAccess" />
+                    <MudSwitch Label="Has Language Support" @bind-Value="_item.HasLanguageSupport" />
+                </MudField>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton    Variant="Variant.Filled" Color="Color.Success" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
+            <MudButton   Variant="Variant.Filled" Color="Color.Secondary" Href="@PageState.ReturnUrl" >@Localizer["Cancel"]</MudButton>
+        </MudCardActions>
+    </MudCard>
 }
 

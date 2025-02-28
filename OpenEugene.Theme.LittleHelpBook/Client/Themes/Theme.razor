@@ -6,7 +6,7 @@
 @inherits ThemeBase
 
 @* Required *@
-<MudThemeProvider IsDarkMode=true />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudPopoverProvider />
 
 @* Needed for dialogs 

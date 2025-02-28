@@ -10,39 +10,42 @@
 @* Needed for snackbars 
 <MudSnackbarProvider />*@
 
-@if (_list == null)
-{
-<p><em>Loading...</em></p>
-}
-else
+@if (_list != null)
 {
     @if (_list.Any())
     {
-        <MudField Label="Phone Number(s)" Variant="Variant.Outlined">
-            <MudDataGrid Items="@_list" Filterable="false" SortMode="@SortMode.None" Groupable="false">
-                <Columns>
-                    <PropertyColumn Property="x => x.FullNumber" Title="Number"  />
-                    <PropertyColumn Property="x => x.Description" />
-                    <AuthorizeView Roles="@(LhbRoleNames.Editors)" Context="authCon">
+        <MudCard Outlined="true" >
+            <MudCardHeader>
+                <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h6">Phone Numbers(s)</MudText>
+                    <AuthorizeView Roles="@(LhbRoleNames.Editors)">
                         <Authorized>
-                            <TemplateColumn>
-                                <HeaderTemplate>
-                                    <MudStack row AlignItems="AlignItems.End">
-                                        <MudIconButton OnClick="@(m => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
-                                    </MudStack>                               
-                                </HeaderTemplate>
-                                <CellTemplate>
-                                    <MudStack row AlignItems="AlignItems.End">
-                                        <MudIconButton OnClick="@(m => Edit(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
-                                        <MudIconButton OnClick="@(m => Delete(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
-                                    </MudStack>
-                                </CellTemplate>
-                            </TemplateColumn>
+                            <MudIconButton Color="Color.Primary"  OnClick="@(() => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
                         </Authorized>
                     </AuthorizeView>
-                </Columns>
-            </MudDataGrid>
-        </MudField>
+                </MudStack>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudDataGrid Items="@_list" Filterable="false" SortMode="@SortMode.None" Groupable="false" Outlined="true">
+                    <Columns>
+                        <PropertyColumn Property="x => x.FullNumber" Title="Number"  />
+                        <PropertyColumn Property="x => x.Description" />
+                        <AuthorizeView Roles="@(LhbRoleNames.Editors)" Context="authCon">
+                            <Authorized>
+                                <TemplateColumn>
+                                    <CellTemplate>
+                                        <MudStack row AlignItems="AlignItems.End">
+                                            <MudIconButton OnClick="@(m => Edit(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
+                                            <MudIconButton OnClick="@(m => Delete(context.Item))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
+                                        </MudStack>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Authorized>
+                        </AuthorizeView>
+                    </Columns>
+                </MudDataGrid>
+            </MudCardContent>
+        </MudCard>
     }
     else
     {

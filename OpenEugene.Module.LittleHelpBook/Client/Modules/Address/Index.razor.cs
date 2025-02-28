@@ -14,6 +14,8 @@ using Oqtane.Services;
 using OpenEugene.Module.LittleHelpBook.Services;
 using M= OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
+using MudBlazor;
 
 namespace OpenEugene.Module.Address;
 
@@ -25,7 +27,8 @@ public partial class Index : ModuleBase
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
-	
+    [Inject] public MudBlazor.IDialogService dialogService { get; set; }
+
     public override List<Resource> Resources => new List<Resource>()
     {
         new Resource { ResourceType = ResourceType.Stylesheet,  Url = "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" },
@@ -39,7 +42,7 @@ public partial class Index : ModuleBase
 
     private int _providerId = -1;
 
-    public override string UrlParametersTemplate => Routing.ProviderTemplate;
+    public override string UrlParametersTemplate => Routing.AddressTemplate;
 
 
     protected override async Task OnInitializedAsync()
@@ -65,7 +68,7 @@ public partial class Index : ModuleBase
             _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
 
             (_list, var code) = await AddressService.GetAddressesAsync(_providerId);
-            if (!IsSuccessStatusCode(code))
+            if (!this.IsSuccessStatusCode(code))
             {
                 throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
             }
@@ -74,13 +77,42 @@ public partial class Index : ModuleBase
         }
     }
 
+    private void Edit(M.Address item)
+    {
+        var url = this.ComposeUrl(
+            basePath: PageState.Page.Path,
+            moduleId: ModuleState.ModuleId,
+            action: "Edit",
+            _providerId, item.AddressId);
+
+        NavigationManager.NavigateTo(url);
+    }
+
+    private void Add()
+    {
+        var url = this.ComposeUrl(
+            basePath: PageState.Page.Path,
+            moduleId: ModuleState.ModuleId,
+            action: "Add",
+            _providerId);
+
+        NavigationManager.NavigateTo(url);
+    }
 
     private async Task Delete(M.Address item)
     {
+        var options = new DialogOptions { CloseOnEscapeKey = true, };
+        // confirm delete using MudBlazor Dialog
+        var confirm = await dialogService.ShowMessageBox("Delete?",
+            $"Delete address {item.Address1}?",
+            "Yes", cancelText: "No", options: options);
+
+        if (!confirm.HasValue || !confirm.Value) return;
+
         try
         {
             var code = await AddressService.DeleteAddressAsync(item.AddressId);
-            if (!IsSuccessStatusCode(code)) {
+            if (!this.IsSuccessStatusCode(code)) {
                 throw new HttpRequestException($"Error Deleting LittleHelpBooks. id:{item.AddressId}, Code: {code}");
             }
             await logger.LogInformation("LittleHelpBook Deleted {item}", item);
@@ -96,8 +128,5 @@ public partial class Index : ModuleBase
         }
     }
 
-     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
-        return (int)statusCode >= 200 && (int)statusCode <= 299; 
-    }
 }
 

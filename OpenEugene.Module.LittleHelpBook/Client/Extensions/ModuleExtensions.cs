@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,11 @@ public static class ModuleExtensions
         var edit = moduleBase.EditUrl(basePath, moduleId, action, parms);
         var returnUrl = moduleBase.NavigateUrl(basePath, $"{parameters[0]}").Replace("?", "/!/"); // Conver to URL Parameters
         return $"{edit}?returnUrl={returnUrl}";
+    }
+
+    public static bool IsSuccessStatusCode(this ModuleBase moduleBase, HttpStatusCode statusCode)
+    {
+        return (int)statusCode >= 200 && (int)statusCode <= 299;
     }
 
 }

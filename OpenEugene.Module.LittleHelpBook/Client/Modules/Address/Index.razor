@@ -10,17 +10,63 @@
 @* Needed for snackbars 
 <MudSnackbarProvider />*@
 
-@if (_list == null)
+@if (_list != null)
 {
-<p><em>Loading...</em></p>
-}
-else
-{
-    <MudField Label="Address(es)" Variant="Variant.Outlined">
-        @foreach (var addr in _list)
-        {
-            <AddressDisplay Addr="@addr"></AddressDisplay>
-        }
+    <MudCard Outlined="true" >
+        <MudCardHeader>
+            <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h6">Addresses</MudText>
+                <AuthorizeView Roles="@(LhbRoleNames.Editors)">
+                    <Authorized>
+                        <MudIconButton  Color="Color.Primary"  OnClick="@(() => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
+                    </Authorized>
+                </AuthorizeView>
+            </MudStack>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudStack>
+                @foreach (var addr in _list)
+                {
+                    <MudCard Outlined="true">
+                        <MudCardContent>
+                            @if (!string.IsNullOrEmpty(addr.Address1))
+                            {
+                                <MudText>@addr.Address1</MudText>
+                            }
+                            @if (!string.IsNullOrEmpty(addr.Address2))
+                            {
+                                <MudText>@addr.Address2</MudText>
+                            }
+                            @if (!string.IsNullOrEmpty(addr.Address3))
+                            {
+                                <MudText>@addr.Address3</MudText>
+                            }
+                            <MudText>@addr.City, @addr.State @addr.PostalCode</MudText>
+                            <MudStack row>
+                                @if (addr.HasWheelchairAccess)
+                                {
+                                    <MudIcon Icon="@MudBlazor.Icons.Material.Filled.AccessibleForward" />
+                                }
+                                @if (addr.HasLanguageSupport)
+                                {
+                                    <MudIcon Icon="@MudBlazor.Icons.Material.Filled.SpatialAudioOff" />
+                                }
+                            </MudStack>
+                        </MudCardContent>
+                        <AuthorizeView Roles="@(LhbRoleNames.Editors)">
+                            <Authorized>
+                                <MudCardActions>
+                                    <MudStack row AlignItems="AlignItems.End">
+                                        <MudIconButton OnClick="@(() => Edit(addr))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
+                                        <MudIconButton OnClick="@(() => Delete(addr))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
+                                    </MudStack>
+                                </MudCardActions>
+                            </Authorized>
+                        </AuthorizeView>
+                    </MudCard>
+                }
+            </MudStack>
 
-    </MudField>
+        </MudCardContent>
+    </MudCard>
 }

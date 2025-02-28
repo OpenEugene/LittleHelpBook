@@ -18,5 +18,9 @@ namespace OpenEugene.Module.LittleHelpBook.Client.Viewmodels
         public const string PhoneTemplate = "/{providerId}/{phoneId}";
         public const string PhoneId = "phoneId";
 
+        // phone constants for URLParameters
+        public const string AddressTemplate = "/{providerId}/{addressId}";
+        public const string AddressId = "addressId";
+
     }
 }
