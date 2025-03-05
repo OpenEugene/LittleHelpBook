@@ -26,7 +26,6 @@ public class AddressController : ModuleControllerBase
     }
 
     [HttpGet("provider/{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
     public async Task<ActionResult<Address>> GetByProvider(int id)
     {
         try
@@ -43,6 +42,7 @@ public class AddressController : ModuleControllerBase
 
     // POST api/<controller>
     [HttpPost]
+    [Authorize(Roles = RoleNames.Registered)]
     public async Task<ActionResult<Models.Address>> Post([FromBody] Models.Address item)
     {
         if (ModelState.IsValid )
@@ -79,6 +79,7 @@ public class AddressController : ModuleControllerBase
 
     // DELETE api/<controller>/5
     [HttpDelete("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
     public void Delete(int id)
     {
         var item = _LittleHelpBookRepository.GetAddressByAddressId(id);

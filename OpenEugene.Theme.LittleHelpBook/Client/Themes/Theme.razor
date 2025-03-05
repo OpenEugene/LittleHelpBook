@@ -6,7 +6,7 @@
 @inherits ThemeBase
 
 @* Required *@
-<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudPopoverProvider />
 
 @* Needed for dialogs 
@@ -17,7 +17,7 @@
 
 
 <main role="main">
-    <nav class="navbar navbar-dark bg-primary fixed-top">
+    <nav class="navbar navbar-dark mud-theme-primary fixed-top">
         <Logo /><Menu Orientation="Horizontal" />
         <div class="controls ms-auto">
             <div class="controls-group"><UserProfile /> <Login /> <ControlPanel /></div>

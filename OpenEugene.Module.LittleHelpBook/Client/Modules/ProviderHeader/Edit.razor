@@ -2,15 +2,7 @@
 
 @namespace OpenEugene.Module.ProviderHeader
 @inherits ModuleBase
-@* Required *@
-<MudThemeProvider IsDarkMode=true />
-<MudPopoverProvider />
 
-@* Needed for dialogs
-<MudDialogProvider />*@
-
-@* Needed for snackbars
-<MudSnackbarProvider />*@
 
 @if (IsLoaded)
 {
@@ -24,7 +16,7 @@
             </MudForm>
         </MudCardContent>
         <MudCardActions>
-            <MudButton   Variant="Variant.Filled" Color="Color.Success" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
+            <MudButton   Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>Save())">@Localizer["Save"]</MudButton>
             <MudButton   Variant="Variant.Filled" Color="Color.Secondary" Href="@PageState.ReturnUrl" >@Localizer["Cancel"]</MudButton>
         </MudCardActions>
     </MudCard>

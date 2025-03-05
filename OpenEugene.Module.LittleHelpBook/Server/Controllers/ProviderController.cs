@@ -43,7 +43,6 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
         public Provider Get(int id)
         {
             Provider item = _LittleHelpBookRepository.GetProvider(id);
@@ -52,7 +51,6 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // GET api/<controller>/5
         [HttpGet("vm/{id}")]
-       // [Authorize(Policy = PolicyNames.ViewModule)]
         public ActionResult<ProviderViewModel> GetVM(int id)
         {
             var item = _LittleHelpBookRepository.GetProviderViewModel(id);
@@ -64,7 +62,6 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // GET api/<controller>/5
         [HttpGet("ProviderAttributes/{id}")]
-        // [Authorize(Policy = PolicyNames.ViewModule)]
         public ActionResult<List<ProviderViewModel>> GetProviderAttributes(int id)
         {
             var item = _LittleHelpBookRepository.GetProviderAttributesByProviderId(id);
@@ -73,8 +70,8 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public Provider Post([FromBody] Provider item)
+    [Authorize(Roles = RoleNames.Registered)]
+    public Provider Post([FromBody] Provider item)
         {
             if (ModelState.IsValid )
             {
@@ -91,8 +88,8 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public Provider Put(int id, [FromBody] Provider item)
+    [Authorize(Roles = RoleNames.Registered)]
+    public Provider Put(int id, [FromBody] Provider item)
         {
             if (ModelState.IsValid && _LittleHelpBookRepository.GetProvider(item.ProviderId, false) != null)
             {
@@ -110,8 +107,8 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // PUT api/<controller>/5
         [HttpPut("vm/{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public ProviderViewModel PutVm(int id, [FromBody] ProviderViewModel item)
+    [Authorize(Roles = RoleNames.Registered)]
+    public ProviderViewModel PutVm(int id, [FromBody] ProviderViewModel item)
         {
             if (ModelState.IsValid)
             {
@@ -129,8 +126,8 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public void Delete(int id)
+    [Authorize(Roles = RoleNames.Registered)]
+    public void Delete(int id)
         {
             Provider item = _LittleHelpBookRepository.GetProvider(id);
             if (item != null )
@@ -182,8 +179,8 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
         // DELETE api/<controller>/5
         [HttpDelete("ProviderAttribute/{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public void DeleteProviderAttribute(int id)
+    [Authorize(Roles = RoleNames.Registered)]
+    public void DeleteProviderAttribute(int id)
         {
            var item = _LittleHelpBookRepository.GetProviderAttribute(id);
             if (item != null)

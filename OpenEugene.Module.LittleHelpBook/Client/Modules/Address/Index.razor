@@ -1,14 +1,6 @@
 @namespace OpenEugene.Module.Address
 @inherits ModuleBase
-@* Required *@
-<MudThemeProvider IsDarkMode=true />
-<MudPopoverProvider />
 
-@* Needed for dialogs 
-<MudDialogProvider />*@
-
-@* Needed for snackbars 
-<MudSnackbarProvider />*@
 
 @if (_list != null)
 {
@@ -57,8 +49,8 @@
                             <Authorized>
                                 <MudCardActions>
                                     <MudStack row AlignItems="AlignItems.End">
-                                        <MudIconButton OnClick="@(() => Edit(addr))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
-                                        <MudIconButton OnClick="@(() => Delete(addr))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
+                                        <MudIconButton Color="Color.Primary" OnClick="@(() => Edit(addr))" Icon="@MudBlazor.Icons.Material.Filled.Edit" aria-label="edit" />
+                                        <MudIconButton Color="Color.Tertiary" OnClick="@(() => Delete(addr))" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
                                     </MudStack>
                                 </MudCardActions>
                             </Authorized>

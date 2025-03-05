@@ -24,7 +24,6 @@ public class PhoneNumberController : ModuleControllerBase
 
     // GET api/<controller>/5
     [HttpGet("provider/{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
     public async Task<ActionResult<PhoneNumber>> GetByProvider(int id)
     {
         try
@@ -40,7 +39,6 @@ public class PhoneNumberController : ModuleControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
     public async Task<ActionResult<PhoneNumber>> Get(int id)
     {
         try
@@ -58,6 +56,7 @@ public class PhoneNumberController : ModuleControllerBase
 
     // POST api/<controller>
     [HttpPost]
+    [Authorize(Roles = RoleNames.Registered)]
     public PhoneNumber Post([FromBody] PhoneNumber item)
     {
         if (ModelState.IsValid)
@@ -95,6 +94,7 @@ public class PhoneNumberController : ModuleControllerBase
 
     // DELETE api/<controller>/5
     [HttpDelete("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
     public void Delete(int id)
     {
         var item = _LittleHelpBookRepository.GetPhoneNumberByPhoneNumberId(id);

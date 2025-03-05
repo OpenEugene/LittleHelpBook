@@ -48,7 +48,6 @@ namespace OpenEugene.Module.LittleHelpBook.Controllers;
         }
 
     [HttpGet("provider/{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
     public async Task<ActionResult<ProviderAttributeViewModel>> GetByProvider(int id)
     {
         try

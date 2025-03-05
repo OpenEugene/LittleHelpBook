@@ -17,52 +17,49 @@ namespace OpenEugene.Theme.LittleHelpBook
 
         private bool _login = true;
         private bool _register = true;
-        private bool _isDarkMode;
+        private bool _isDarkMode = true;
         private MudThemeProvider _mudThemeProvider;
 
-        private MudTheme _theme = new()
+        private MudTheme _theme = new MudTheme()
         {
-            PaletteLight = new()
+            PaletteLight = new PaletteLight()
             {
-                Primary = "#22AACB",
-                Secondary = "#4EBC83",
+                Primary = "#22aacb",
+                Secondary = "#4ebc83",
                 Tertiary = "#F48E5C",
-                Success = "#4EBC83",
-                Error = "#C4515F",
-                Warning = "#FFBB3E",
+                Success = "#4ebc83",
+                Error = "#c4515f",
+                Warning = "#ffbb3e",
                 Background = "#ffffff",
                 AppbarBackground = "#ffffff",
                 AppbarText = "#000000",
                 DrawerBackground = "#ffffff",
                 DrawerText = "#000000",
-                TextPrimary = "#000000",
-                TextSecondary = "#000000"
             },
-            PaletteDark = new()
+            PaletteDark = new PaletteDark()
             {
-                Primary = "#22AACB",
-                Secondary = "#4EBC83",
-                Tertiary = "#F48E5C",
-                Success = "#4EBC83",
-                Error = "#C4515F",
-                Warning = "#FFBB3E",
+                Primary = "#22aacb",
+                Secondary = "#4ebc83",
+                Tertiary = "#f48e5c",
+                Success = "#4ebc83",
+                Error = "#c4515f",
+                Warning = "#ffbb3e",
                 Background = "#000000",
                 AppbarBackground = "#000000",
                 AppbarText = "#ffffff",
                 DrawerBackground = "#000000",
                 DrawerText = "#ffffff",
-                TextPrimary = "#ffffff",
-                TextSecondary = "#ffffff"
             }
         };
 
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             try
             {
                 var settings = SettingService.MergeSettings(PageState.Site.Settings, PageState.Page.Settings);
                 _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true"));
                 _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true"));
+                
             }
             catch
             {
@@ -70,13 +67,14 @@ namespace OpenEugene.Theme.LittleHelpBook
             }
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-                StateHasChanged();
-            }
-        }
+   
+        //protected override async Task OnAfterRenderAsync(bool firstRender)
+        //{
+        //    if (firstRender)
+        //    {
+        //        _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+        //        StateHasChanged();
+        //    }
+        //}
     }
 }
