@@ -17,6 +17,7 @@ using MudBlazor;
 using OpenEugene.Module.LittleHelpBook.Shared;
 using Oqtane.Security;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 
 namespace OpenEugene.Module.ProviderSearch;
 
@@ -80,25 +81,19 @@ public partial class Index : ModuleBase
         return false;
     };
 
-    private async Task Delete(LittleHelpBook.Models.Provider item)
+    private void AddFilter()
     {
-        try
-        {
-            await ProviderService.DeleteProviderAsync(item.ProviderId);
-            await logger.LogInformation("Provider Deleted {item}", item);
-            (_list, var code) = await ProviderService.GetProvidersAsync();
-            if (!IsSuccessStatusCode(code))
-            {
-                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
-            }
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Deleting Provider {item} {Error}", item, ex.Message);
-            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
-        }
+        // urlencode the return url
+
+        var retUrl = WebUtility.UrlEncode(PageState.Page.Path);
+        var searchParam = WebUtility.UrlEncode(_searchString);
+        var paramstring = $"?returnurl={retUrl}&search={searchParam}";
+
+        var url = EditUrl("AddFilter", paramstring);
+
+        NavigationManager.NavigateTo(url);
     }
+
 
     private void Selected(DataGridRowClickEventArgs<LittleHelpBook.Models.Provider> args)
     {
