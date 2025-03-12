@@ -85,9 +85,8 @@ public partial class Index : ModuleBase
     {
         // urlencode the return url
 
-        var retUrl = WebUtility.UrlEncode(PageState.Page.Path);
-        var searchParam = WebUtility.UrlEncode(_searchString);
-        var paramstring = $"?returnurl={retUrl}&search={searchParam}";
+        var retUrl = WebUtility.UrlEncode($"/{PageState.Page.Path}?search={_searchString}");  //  leading / required by siterouter
+        var paramstring = $"?returnurl={retUrl}";
 
         var url = EditUrl("AddFilter", paramstring);
 

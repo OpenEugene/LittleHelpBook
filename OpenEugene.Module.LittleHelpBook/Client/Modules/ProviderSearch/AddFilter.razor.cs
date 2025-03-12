@@ -130,8 +130,8 @@ namespace OpenEugene.Module.ProviderSearch
                     {
                         _items.Add(subCatId);
                     }
-                    string subCatIds = string.Join(",", _items);
-                    string url = $"{_returnUrl}&filters={subCatIds}";
+                    string subCatIds = WebUtility.UrlEncode(string.Join(",", _items));
+                    string url = $"{PageState.ReturnUrl}&filters={subCatIds}";
 
                     NavigationManager.NavigateTo(url);
                 }
