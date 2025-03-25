@@ -18,6 +18,8 @@ using OpenEugene.Module.LittleHelpBook.Shared;
 using Oqtane.Security;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using OpenEugene.Module.LittleHelpBook.Client.Extensions;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
 
 namespace OpenEugene.Module.ProviderSearch;
 
@@ -65,6 +67,12 @@ public partial class Index : ModuleBase
         }
     }
 
+    //protected override async Task OnParametersSetAsync()
+    //{
+    //    if (!ShouldRender()) return;
+    //    if(PageState.)
+    //}
+
     private Func<LittleHelpBook.Models.Provider, bool> _quickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
@@ -84,10 +92,16 @@ public partial class Index : ModuleBase
     private void AddFilter()
     {
         // urlencode the return url
+        Dictionary<string, string> parameters = new() {
+            { "search",_searchString }
+        };
+        var retUrl = PageState.Route.AbsolutePath + Utilities.CreateQueryString(parameters);
 
-        var retUrl = WebUtility.UrlEncode($"/{PageState.Page.Path}?search={_searchString}");  //  leading / required by siterouter
-        var paramstring = $"?returnurl={retUrl}";
-
+        // add the return url to the query string
+        parameters = new() {
+            { "returnurl",WebUtility.UrlEncode(retUrl) }
+        };
+        var paramstring = Utilities.CreateQueryString(parameters);
         var url = EditUrl("AddFilter", paramstring);
 
         NavigationManager.NavigateTo(url);
