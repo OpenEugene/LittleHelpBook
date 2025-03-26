@@ -12,14 +12,14 @@
         Filterable="true"
         QuickFilter="@_quickFilter">
         <ToolBarContent>
-            <MudStack Row>
-                <MudText Typo="Typo.h6">Search:</MudText>
+            <MudStack Row AlignItems="AlignItems.Baseline">
+                <MudText Typo="Typo.h6">Search</MudText>
                 <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                     AdornmentIcon="@MudBlazor.Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 @*  <MudIconButton Title="New" Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
                 *@ 
-                <MudText Typo="Typo.h6">Filter(s):</MudText>
-                <MudIconButton Color="Color.Primary" OnClick="@(() => AddFilter())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
+                <MudText Typo="Typo.h6">Filter</MudText>
+                <MudIconButton  Color="Color.Primary" OnClick="@(() => AddFilter())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
             </MudStack>
         </ToolBarContent>
         <Columns>

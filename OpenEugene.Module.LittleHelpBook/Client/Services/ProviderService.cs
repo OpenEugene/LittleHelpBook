@@ -22,6 +22,17 @@ namespace OpenEugene.Module.LittleHelpBook.Services
             (var data, var response) = await GetJsonWithResponseAsync<List<Models.Provider>>(url);
             return (data, response.StatusCode);      
         }
+        public async Task<(List<Models.Provider>, HttpStatusCode)> GetProvidersFilteredAsync(string[] filters)
+        {
+            var filterString = string.Join(",", filters);
+            
+            // encode the filter string to ensure it is safe to pass in the URL
+            filterString = System.Web.HttpUtility.UrlEncode(filterString);
+
+            var url = $"{Apiurl}/filtered/{filterString}";
+            (var data, var response) = await GetJsonWithResponseAsync<List<Models.Provider>>(url);
+            return (data, response.StatusCode);
+        }
 
         public async Task<(ProviderViewModel, HttpStatusCode)> GetProviderViewModelAsync(int id)
         {

@@ -20,6 +20,7 @@ using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
+using Oqtane.Modules.Controls;
 
 namespace OpenEugene.Module.ProviderSearch;
 
@@ -27,6 +28,7 @@ public partial class Index : ModuleBase
 {
     List<LittleHelpBook.Models.Provider> _list;
     private string _searchString;
+    private string[] _filters;
 
     [Inject] public ProviderService ProviderService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
@@ -67,11 +69,26 @@ public partial class Index : ModuleBase
         }
     }
 
-    //protected override async Task OnParametersSetAsync()
-    //{
-    //    if (!ShouldRender()) return;
-    //    if(PageState.)
-    //}
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ShouldRender()) return;
+
+        if (PageState.QueryString.ContainsKey("search"))
+        {
+            _searchString = PageState.QueryString["search"];
+        }
+
+        if (PageState.QueryString.ContainsKey("filters"))
+        {
+            _filters = PageState.QueryString["filters"].Split(',');
+            (_list, var code) = await ProviderService.GetProvidersFilteredAsync(_filters);
+
+            if (!IsSuccessStatusCode(code))
+            {
+                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+            }
+        }
+    }
 
     private Func<LittleHelpBook.Models.Provider, bool> _quickFilter => x =>
     {

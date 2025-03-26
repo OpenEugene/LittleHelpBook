@@ -1,58 +1,46 @@
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using Microsoft.JSInterop;
 using MudBlazor;
+using OpenEugene.Module.LittleHelpBook.Services;
 using Oqtane.Models;
 using Oqtane.Modules;
-using Oqtane.Shared;
 using Oqtane.Services;
-
-using OpenEugene.Module.LittleHelpBook.Services;
-using M = OpenEugene.Module.LittleHelpBook.Models;
-using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using Oqtane.Shared;
 using Oqtane.UI;
-using System.Collections;
-using OpenEugene.Module.LittleHelpBook.ViewModels;
-using static MudBlazor.CategoryTypes;
-using System.ComponentModel.Design;
-using System.Collections.ObjectModel;
-using Microsoft.AspNetCore.Components.Web;
-using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Net;
+
+using System.Net.Http;
+using System.Threading.Tasks;
+using M = OpenEugene.Module.LittleHelpBook.Models;
 
 namespace OpenEugene.Module.ProviderSearch
 {
-    public partial class AddFilter: ModuleBase
+    public partial class AddFilter : ModuleBase
     {
-		[Inject] public AttributeService AttributeService { get; set; }
+        [Inject] public AttributeService AttributeService { get; set; }
         [Inject] public CategoryService CategoryService { get; set; }
         [Inject] public SubCategoryService SubCategoryService { get; set; }
         [Inject] public ProviderAttributeService ProviderAttributeService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
-		[Inject] public IStringLocalizer<AddFilter> Localizer { get; set; }		
+        [Inject] public IStringLocalizer<AddFilter> Localizer { get; set; }
         [Inject] public ISettingService SettingService { get; set; }
 
         private MudForm mudform;
         private bool success = false;
         private SettingsViewModel _settingsVM;
-        private bool IsLoaded = false; 
-        private int _providerid;
-        private M.ProviderAttribute _item = new();
+        private bool IsLoaded = false;
         private List<M.Category> _cats;
         private List<M.SubCategory> _subCats;
         private int? _selectedCatId;
         private IReadOnlyCollection<int> _selectedSubCatIds;
-        private string _returnUrl;
 
         //public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
 
-		public override string Actions => "AddFilter";
+        public override string Actions => "AddFilter";
 
-		public override string Title => "Services";
+        public override string Title => "Services";
 
         public override List<Resource> Resources => new List<Resource>()
         {
@@ -113,7 +101,7 @@ namespace OpenEugene.Module.ProviderSearch
                 await logger.LogError(ex, "Error Loading SubCategories {Error}", ex.Message);
                 AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
             }
-           
+
         }
 
         private async Task Filter()
@@ -126,9 +114,12 @@ namespace OpenEugene.Module.ProviderSearch
                 {
                     List<int> _items = new() { _selectedCatId.Value };
 
-                    foreach (var subCatId in _selectedSubCatIds)
+                    if(_selectedSubCatIds != null)
                     {
-                        _items.Add(subCatId);
+                        foreach (var subCatId in _selectedSubCatIds)
+                        {
+                            _items.Add(subCatId);
+                        }
                     }
                     string subCatIds = WebUtility.UrlEncode(string.Join(",", _items));
                     string url = $"{PageState.ReturnUrl}&filters={subCatIds}";
@@ -147,8 +138,9 @@ namespace OpenEugene.Module.ProviderSearch
             }
         }
 
-        static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
-            return (int)statusCode >= 200 && (int)statusCode <= 299; 
+        static bool IsSuccessStatusCode(HttpStatusCode statusCode)
+        {
+            return (int)statusCode >= 200 && (int)statusCode <= 299;
         }
     }
 }
