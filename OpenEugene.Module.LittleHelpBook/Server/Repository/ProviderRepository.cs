@@ -17,6 +17,20 @@ namespace OpenEugene.Module.LittleHelpBook.Repository
             var list = db.Provider.AsNoTracking();
             return list.ToList();
         }
+        public IEnumerable<Provider> GetProvidersFiltered(int[] attributes)
+        {
+            using var db = _factory.CreateDbContext();
+
+            // get a list of providers that have any of the attributes
+
+            var list = from p in db.Provider
+                       join pa in db.ProviderAttribute on p.ProviderId equals pa.ProviderId
+                       where attributes.Contains(pa.AttributeId)
+                       select p;
+
+            return list.ToList();
+        }
+
 
         public Provider GetProvider(int id)
         {

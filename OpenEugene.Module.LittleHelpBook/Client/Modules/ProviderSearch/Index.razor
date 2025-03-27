@@ -12,11 +12,29 @@
         Filterable="true"
         QuickFilter="@_quickFilter">
         <ToolBarContent>
-            <MudText Typo="Typo.h4">Search</MudText>
-            <MudSpacer />
-            <MudIconButton Title="New" Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
-            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                            AdornmentIcon="@MudBlazor.Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudStack Row AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h6">Search</MudText>
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                AdornmentIcon="@MudBlazor.Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                @*  <MudIconButton Title="New" Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
+                *@ 
+                <MudButton Color="Color.Primary" OnClick="@(() => AddFilter())" StartIcon="@MudBlazor.Icons.Material.Filled.FilterAlt" aria-label="add">Filter</MudButton>
+
+                @if (_filters != null && _filters.Length > 0)
+                {
+                  
+                    @foreach (var cat in _attributes.Where(a => _filters.Contains(a.AttributeId)))
+                    {
+                        <MudChip
+                            Variant="Variant.Outlined"
+                            Size="Size.Small"      
+                            Text="@cat.Name"
+                            Value="@cat.AttributeId">
+                        </MudChip>
+                    }
+       
+                }
+            </MudStack>
         </ToolBarContent>
         <Columns>
             <TemplateColumn>

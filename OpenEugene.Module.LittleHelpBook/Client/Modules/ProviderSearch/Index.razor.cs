@@ -17,15 +17,23 @@ using MudBlazor;
 using OpenEugene.Module.LittleHelpBook.Shared;
 using Oqtane.Security;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using OpenEugene.Module.LittleHelpBook.Client.Extensions;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
+using Oqtane.Modules.Controls;
 
 namespace OpenEugene.Module.ProviderSearch;
 
 public partial class Index : ModuleBase
 {
     List<LittleHelpBook.Models.Provider> _list;
+    List<LittleHelpBook.Models.Attribute> _attributes;
+
     private string _searchString;
+    private int[] _filters;
 
     [Inject] public ProviderService ProviderService { get; set; }
+    [Inject] public AttributeService AttributeService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
@@ -55,12 +63,44 @@ public partial class Index : ModuleBase
                 throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
             }
 
+            (_attributes, code) = await AttributeService.GetAttributesAsync();
+            if (!IsSuccessStatusCode(code))
+            {
+                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+            }
+
+
             IsLoaded = true;
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading LittleHelpBook {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ShouldRender()) return;
+
+        if (PageState.QueryString.ContainsKey("search"))
+        {
+            _searchString = PageState.QueryString["search"];
+        }
+
+        if (PageState.QueryString.ContainsKey("filters"))
+        {
+            //decode the string
+            var decoded = WebUtility.UrlDecode(PageState.QueryString["filters"]);
+            var filters = decoded.Split(',');
+            _filters = Array.ConvertAll(filters, int.Parse);
+
+            (_list, var code) = await ProviderService.GetProvidersFilteredAsync(filters);
+
+            if (!IsSuccessStatusCode(code))
+            {
+                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+            }
         }
     }
 
@@ -80,25 +120,24 @@ public partial class Index : ModuleBase
         return false;
     };
 
-    private async Task Delete(LittleHelpBook.Models.Provider item)
+    private void AddFilter()
     {
-        try
-        {
-            await ProviderService.DeleteProviderAsync(item.ProviderId);
-            await logger.LogInformation("Provider Deleted {item}", item);
-            (_list, var code) = await ProviderService.GetProvidersAsync();
-            if (!IsSuccessStatusCode(code))
-            {
-                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
-            }
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Deleting Provider {item} {Error}", item, ex.Message);
-            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
-        }
+        // urlencode the return url
+        Dictionary<string, string> parameters = new() {
+            { "search",_searchString }
+        };
+        var retUrl = PageState.Route.AbsolutePath + Utilities.CreateQueryString(parameters);
+
+        // add the return url to the query string
+        parameters = new() {
+            { "returnurl",WebUtility.UrlEncode(retUrl) }
+        };
+        var paramstring = Utilities.CreateQueryString(parameters);
+        var url = EditUrl("AddFilter", paramstring);
+
+        NavigationManager.NavigateTo(url);
     }
+
 
     private void Selected(DataGridRowClickEventArgs<LittleHelpBook.Models.Provider> args)
     {

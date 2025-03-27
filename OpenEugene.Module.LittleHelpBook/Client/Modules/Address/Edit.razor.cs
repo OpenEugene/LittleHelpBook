@@ -37,7 +37,7 @@ namespace OpenEugene.Module.Address
         private int _providerId = -1;
 
 
-        public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+        //public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
 
 		public override string Actions => "Add,Edit";
 

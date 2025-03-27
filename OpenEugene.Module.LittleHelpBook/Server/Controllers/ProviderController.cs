@@ -10,189 +10,213 @@ using System.Net;
 using OpenEugene.Module.LittleHelpBook.ViewModels;
 using OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Repository;
+using System.Linq;
 
 
 namespace OpenEugene.Module.LittleHelpBook.Controllers;
 
-    [Route(ControllerRoutes.ApiRoute)]
-    public class ProviderController : ModuleControllerBase
+[Route(ControllerRoutes.ApiRoute)]
+public class ProviderController : ModuleControllerBase
+{
+    private readonly LittleHelpBookRepository _LittleHelpBookRepository;
+
+    public ProviderController(LittleHelpBookRepository LittleHelpBookRepository, ILogManager logger, IHttpContextAccessor accessor) : base(logger, accessor)
     {
-        private readonly LittleHelpBookRepository _LittleHelpBookRepository;
+        _LittleHelpBookRepository = LittleHelpBookRepository;
+    }
 
-        public ProviderController(LittleHelpBookRepository LittleHelpBookRepository, ILogManager logger, IHttpContextAccessor accessor) : base(logger, accessor)
+    // GET: api/<controller>?moduleid=x
+    [HttpGet]
+    public IEnumerable<Provider> Get()
+    {
+        try
         {
-            _LittleHelpBookRepository = LittleHelpBookRepository;
+            var list = _LittleHelpBookRepository.GetProviders();
+            return list;
+        }
+        catch (System.Exception ex)
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Security, ex, "Get Providers Failed");
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            return null;
         }
 
-        // GET: api/<controller>?moduleid=x
-        [HttpGet]
-        public IEnumerable<Provider> Get()
+    }
+
+    [HttpGet("filtered/{filters}")]
+    public IEnumerable<Provider> GetFiltered(string filters)
+    {
+        try
         {
-            try { 
-                var list = _LittleHelpBookRepository.GetProviders();
-                return list;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, ex, "Get Providers Failed");
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                return null;
-            }
-           
+            //decode the filter string
+            filters = System.Net.WebUtility.UrlDecode(filters);
+            // convert the filter string to an array of integers
+            var filterList = filters.Split(",").Select(int.Parse).ToArray();
+
+            var list = _LittleHelpBookRepository.GetProvidersFiltered(filterList);
+            return list;
         }
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public Provider Get(int id)
+        catch (System.Exception ex)
         {
-            Provider item = _LittleHelpBookRepository.GetProvider(id);
-            return item;
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("vm/{id}")]
-        public ActionResult<ProviderViewModel> GetVM(int id)
-        {
-            var item = _LittleHelpBookRepository.GetProviderViewModel(id);
-            if (item == null) { 
-                return NotFound();
-            }
-            return Ok(item);
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("ProviderAttributes/{id}")]
-        public ActionResult<List<ProviderViewModel>> GetProviderAttributes(int id)
-        {
-            var item = _LittleHelpBookRepository.GetProviderAttributesByProviderId(id);
-            return Ok(item);
-        }
-
-        // POST api/<controller>
-        [HttpPost]
-    [Authorize(Roles = RoleNames.Registered)]
-    public Provider Post([FromBody] Provider item)
-        {
-            if (ModelState.IsValid )
-            {
-                item = _LittleHelpBookRepository.AddProvider(item);
-                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Provider Added {item}", item);
-            }
-            else
-            {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                item = null;
-            }
-            return item;
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
-    public Provider Put(int id, [FromBody] Provider item)
-        {
-            if (ModelState.IsValid && _LittleHelpBookRepository.GetProvider(item.ProviderId, false) != null)
-            {
-                item = _LittleHelpBookRepository.UpdateProvider(item);
-                _logger.Log(LogLevel.Information, this, LogFunction.Update, "Provider Updated {item}",item);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Put Attempt {item}", item);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                item = null;
-            }
-            return item;
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("vm/{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
-    public ProviderViewModel PutVm(int id, [FromBody] ProviderViewModel item)
-        {
-            if (ModelState.IsValid)
-            {
-                item = _LittleHelpBookRepository.UpdateProvider(item);
-                _logger.Log(LogLevel.Information, this, LogFunction.Update, "Provider Updated {item}", item);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Put Attempt {item}", item);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                item = null;
-            }
-            return item;
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
-    public void Delete(int id)
-        {
-            Provider item = _LittleHelpBookRepository.GetProvider(id);
-            if (item != null )
-            {
-                _LittleHelpBookRepository.DeleteProvider(id);
-                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Provider Deleted {id}", id);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Delete Attempt {id}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            }
-        }
-
-        // POST api/<controller>
-        [HttpPost]
-        public Address Post([FromBody] Address item)
-        {
-            if (ModelState.IsValid)
-            {
-                item = _LittleHelpBookRepository.AddAddress(item);
-                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Address Added {item}", item);
-            }
-            else
-            {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-                item = null;
-            }
-            return item;
-        } // POST api/<controller>
-        [HttpPost("ProviderAttribute")]
-        public ProviderAttribute Post([FromBody] ProviderAttribute item)
-        {
-            if (ModelState.IsValid)
-            {
-             
-                item = _LittleHelpBookRepository.AddProviderAttribute(item);
-                _logger.Log(LogLevel.Information, this, LogFunction.Create, "ProviderAttribute Added {item}", item);
-            }
-            else
-            {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-                item = null;
-            }
-            return item;
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("ProviderAttribute/{id}")]
-    [Authorize(Roles = RoleNames.Registered)]
-    public void DeleteProviderAttribute(int id)
-        {
-           var item = _LittleHelpBookRepository.GetProviderAttribute(id);
-            if (item != null)
-            {
-                _LittleHelpBookRepository.DeleteProviderAttribute(id);
-                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Provider Deleted {id}", id);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Delete Attempt {id}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            }
+            _logger.Log(LogLevel.Error, this, LogFunction.Security, ex, "Get Providers Filtered Failed");
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            return null;
         }
     }
+
+    // GET api/<controller>/5
+    [HttpGet("{id}")]
+    public Provider Get(int id)
+    {
+        Provider item = _LittleHelpBookRepository.GetProvider(id);
+        return item;
+    }
+
+    // GET api/<controller>/5
+    [HttpGet("vm/{id}")]
+    public ActionResult<ProviderViewModel> GetVM(int id)
+    {
+        var item = _LittleHelpBookRepository.GetProviderViewModel(id);
+        if (item == null)
+        {
+            return NotFound();
+        }
+        return Ok(item);
+    }
+
+    // GET api/<controller>/5
+    [HttpGet("ProviderAttributes/{id}")]
+    public ActionResult<List<ProviderViewModel>> GetProviderAttributes(int id)
+    {
+        var item = _LittleHelpBookRepository.GetProviderAttributesByProviderId(id);
+        return Ok(item);
+    }
+
+    // POST api/<controller>
+    [HttpPost]
+    [Authorize(Roles = RoleNames.Registered)]
+    public Provider Post([FromBody] Provider item)
+    {
+        if (ModelState.IsValid)
+        {
+            item = _LittleHelpBookRepository.AddProvider(item);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "Provider Added {item}", item);
+        }
+        else
+        {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            item = null;
+        }
+        return item;
+    }
+
+    // PUT api/<controller>/5
+    [HttpPut("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public Provider Put(int id, [FromBody] Provider item)
+    {
+        if (ModelState.IsValid && _LittleHelpBookRepository.GetProvider(item.ProviderId, false) != null)
+        {
+            item = _LittleHelpBookRepository.UpdateProvider(item);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Provider Updated {item}", item);
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Put Attempt {item}", item);
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            item = null;
+        }
+        return item;
+    }
+
+    // PUT api/<controller>/5
+    [HttpPut("vm/{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public ProviderViewModel PutVm(int id, [FromBody] ProviderViewModel item)
+    {
+        if (ModelState.IsValid)
+        {
+            item = _LittleHelpBookRepository.UpdateProvider(item);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Provider Updated {item}", item);
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Put Attempt {item}", item);
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            item = null;
+        }
+        return item;
+    }
+
+    // DELETE api/<controller>/5
+    [HttpDelete("{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public void Delete(int id)
+    {
+        Provider item = _LittleHelpBookRepository.GetProvider(id);
+        if (item != null)
+        {
+            _LittleHelpBookRepository.DeleteProvider(id);
+            _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Provider Deleted {id}", id);
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Delete Attempt {id}", id);
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        }
+    }
+
+    // POST api/<controller>
+    [HttpPost]
+    public Address Post([FromBody] Address item)
+    {
+        if (ModelState.IsValid)
+        {
+            item = _LittleHelpBookRepository.AddAddress(item);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "Address Added {item}", item);
+        }
+        else
+        {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+            item = null;
+        }
+        return item;
+    } // POST api/<controller>
+    [HttpPost("ProviderAttribute")]
+    public ProviderAttribute Post([FromBody] ProviderAttribute item)
+    {
+        if (ModelState.IsValid)
+        {
+
+            item = _LittleHelpBookRepository.AddProviderAttribute(item);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "ProviderAttribute Added {item}", item);
+        }
+        else
+        {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+            item = null;
+        }
+        return item;
+    }
+
+    // DELETE api/<controller>/5
+    [HttpDelete("ProviderAttribute/{id}")]
+    [Authorize(Roles = RoleNames.Registered)]
+    public void DeleteProviderAttribute(int id)
+    {
+        var item = _LittleHelpBookRepository.GetProviderAttribute(id);
+        if (item != null)
+        {
+            _LittleHelpBookRepository.DeleteProviderAttribute(id);
+            _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Provider Deleted {id}", id);
+        }
+        else
+        {
+            _logger.Log(LogLevel.Error, this, LogFunction.Security, "Bad Provider Delete Attempt {id}", id);
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        }
+    }
+}
 

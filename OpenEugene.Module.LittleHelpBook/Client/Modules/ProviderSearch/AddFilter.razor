@@ -1,0 +1,70 @@
+@using Oqtane.Modules.Controls
+
+@namespace OpenEugene.Module.ProviderSearch
+@inherits ModuleBase
+
+
+@if (IsLoaded)
+{
+    <MudCard Outlined="true">
+        <MudCardContent>
+            <MudForm @ref="mudform" @bind-IsValid="@success">
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Select Category</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudChipSet 
+                            T="@(int?)" 
+                            SelectionMode="SelectionMode.SingleSelection"
+                            @bind-SelectedValue="_selectedCatId"
+                            CheckMark="true">
+                            <MudStack Row Wrap="Wrap.Wrap">
+                                @foreach (var cat in _cats)
+                                {
+                                    <MudChip Variant="Variant.Outlined" 
+                                        Text="@cat.Name"
+                                        Value="@cat.AttributeId"
+                                        OnClick="@(()=>OnCategoryChange(cat.CategoryId))"></MudChip>
+                                }
+                            </MudStack>
+                        </MudChipSet>
+                    </MudCardContent>
+                </MudCard>
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Typo="Typo.h6">Select Sub-Catagories</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudChipSet 
+                            T="@(int)"
+                            @bind-SelectedValues="_selectedSubCatIds"
+                            CheckMark="true"
+                            SelectionMode="SelectionMode.MultiSelection">
+                            @if (_subCats != null)
+                            {
+                                @foreach (var scat in _subCats)
+                                {
+                                    <MudChip 
+                                        Variant="Variant.Outlined" 
+                                        Text="@scat.Name" 
+                                        Value="@scat.AttributeId">
+                        </MudChip>
+                                }
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2">Pick a Catagory above</MudText>
+                            }
+                        </MudChipSet>
+                    </MudCardContent>
+                </MudCard>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" DisableElevation="true" OnClick="@(()=>Filter())">@Localizer["Filter"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" Href="@PageState.ReturnUrl" Class="mx-2">@Localizer["Cancel"]</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+
