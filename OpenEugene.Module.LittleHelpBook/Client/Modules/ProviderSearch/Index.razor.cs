@@ -27,10 +27,13 @@ namespace OpenEugene.Module.ProviderSearch;
 public partial class Index : ModuleBase
 {
     List<LittleHelpBook.Models.Provider> _list;
+    List<LittleHelpBook.Models.Attribute> _attributes;
+
     private string _searchString;
-    private string[] _filters;
+    private int[] _filters;
 
     [Inject] public ProviderService ProviderService { get; set; }
+    [Inject] public AttributeService AttributeService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
@@ -60,6 +63,13 @@ public partial class Index : ModuleBase
                 throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
             }
 
+            (_attributes, code) = await AttributeService.GetAttributesAsync();
+            if (!IsSuccessStatusCode(code))
+            {
+                throw new HttpRequestException($"Error loading LittleHelpBooks. Code: {code}");
+            }
+
+
             IsLoaded = true;
         }
         catch (Exception ex)
@@ -80,8 +90,12 @@ public partial class Index : ModuleBase
 
         if (PageState.QueryString.ContainsKey("filters"))
         {
-            _filters = PageState.QueryString["filters"].Split(',');
-            (_list, var code) = await ProviderService.GetProvidersFilteredAsync(_filters);
+            //decode the string
+            var decoded = WebUtility.UrlDecode(PageState.QueryString["filters"]);
+            var filters = decoded.Split(',');
+            _filters = Array.ConvertAll(filters, int.Parse);
+
+            (_list, var code) = await ProviderService.GetProvidersFilteredAsync(filters);
 
             if (!IsSuccessStatusCode(code))
             {
