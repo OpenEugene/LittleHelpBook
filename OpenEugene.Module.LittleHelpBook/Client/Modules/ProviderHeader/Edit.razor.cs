@@ -77,6 +77,9 @@ namespace OpenEugene.Module.ProviderHeader
                         throw new HttpRequestException($"Error loading Address. Code: {code}");
                     }
                 }
+                else {
+                    _item = new M.Provider();
+                }
                 IsLoaded = true;
             }
             catch (Exception ex)
