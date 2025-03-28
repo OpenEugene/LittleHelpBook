@@ -101,12 +101,20 @@ namespace OpenEugene.Module.ProviderHeader
 
                     if (PageState.Action == "Add")
                     {
-                        (_item, var code) = await ProviderService.AddProviderAsync(_item);
+                        (var newItem, var code) = await ProviderService.AddProviderAsync(_item);
                         if (code is not HttpStatusCode.OK)
                         {
                             throw new HttpRequestException($"Error Adding {_item}. Code: {code}");
                         }
                         await logger.LogInformation("LittleHelpBook Added {_item}", _item);
+                        
+                        var url = this.ComposeUrl(
+                          basePath: PageState.Page.Path,
+                          moduleId: ModuleState.ModuleId,
+                          action: "Index",
+                          newItem.ProviderId);
+
+                        NavigationManager.NavigateTo(url);
                     }
                     else
                     {

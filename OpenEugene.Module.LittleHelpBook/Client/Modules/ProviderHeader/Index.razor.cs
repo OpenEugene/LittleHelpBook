@@ -67,6 +67,17 @@ public partial class Index : ModuleBase
 
         if (UrlParameters.ContainsKey(Routing.ProviderId)) {
 
+            if (UrlParameters[Routing.ProviderId] == Routing.Actions.Add) {
+                
+                var url = this.ComposeUrl(
+                   basePath: PageState.Page.Path,
+                   moduleId: ModuleState.ModuleId,
+                   action: "Add",
+                   0);
+
+                NavigationManager.NavigateTo(url);
+            }
+
             _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
 
             (_model, var code) = await ProviderService.GetProviderAsync(_providerId);
