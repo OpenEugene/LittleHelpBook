@@ -17,6 +17,9 @@ using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
 using OpenEugene.Module.LittleHelpBook.ViewModels;
 using Oqtane.UI;
 using OpenEugene.Module.LittleHelpBook.Client.Extensions;
+using MudBlazor;
+using OpenEugene.Module.Client.Controls;
+using static MudBlazor.CategoryTypes;
 
 namespace OpenEugene.Module.ProviderHeader;
 
@@ -28,7 +31,8 @@ public partial class Index : ModuleBase
     [Inject] public NavigationManager NavigationManager { get; set; }
     [Inject] public IStringLocalizer<Index> Localizer { get; set; }
     [Inject] public ISettingService SettingService { get; set; }
-	
+    [Inject] IDialogService DialogService { get; set; }
+
     public override List<Resource> Resources => new List<Resource>()
     {
         new Resource { ResourceType = ResourceType.Stylesheet,  Url = "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" },
@@ -93,6 +97,43 @@ public partial class Index : ModuleBase
     private void Back() { 
         NavigationManager.NavigateTo(Routing.ProviderList);
     }
+
+    private async Task Delete()
+    {
+        var parameters = new DialogParameters<DialogConfirm>
+        {
+            { x => x.ContentText, $"Do you really want to delete {_model.Name}? This cannot be undone." },
+            { x => x.ButtonText, "Delete" },
+        };
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<DialogConfirm>($"Delete Provider?", parameters, options);
+
+        if (dialog.Result.IsCanceled)
+        {
+            return;
+        }
+        else
+        {
+            try
+            {
+                var code = await ProviderService.DeleteProviderAsync(_model.ProviderId);
+                if (code is not HttpStatusCode.OK)
+                {
+                    throw new HttpRequestException($"Error Deleting {_model}. Code: {code}");
+                }
+                await logger.LogInformation("LittleHelpBook Deleted {_item}", _model);
+                NavigationManager.NavigateTo(PageState.ReturnUrl);
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error Deleting LittleHelpBook {Error}", ex.Message);
+                AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+            }
+        }
+    }
+
 
     private void Edit()
     {
