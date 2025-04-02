@@ -107,14 +107,10 @@ public partial class Index : ModuleBase
         };
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-
         var dialog = await DialogService.ShowAsync<DialogConfirm>($"Delete Provider?", parameters, options);
+        var result = await dialog.Result;
 
-        if (dialog.Result.IsCanceled)
-        {
-            return;
-        }
-        else
+        if (!result.Canceled)
         {
             try
             {
@@ -124,7 +120,7 @@ public partial class Index : ModuleBase
                     throw new HttpRequestException($"Error Deleting {_model}. Code: {code}");
                 }
                 await logger.LogInformation("LittleHelpBook Deleted {_item}", _model);
-                NavigationManager.NavigateTo(PageState.ReturnUrl);
+                NavigationManager.NavigateTo(Routing.ProviderList);
             }
             catch (Exception ex)
             {
