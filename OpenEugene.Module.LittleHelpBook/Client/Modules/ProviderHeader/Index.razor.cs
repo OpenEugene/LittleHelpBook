@@ -68,30 +68,29 @@ public partial class Index : ModuleBase
     protected override async Task OnParametersSetAsync()
     {
         if (!ShouldRender()) return;
+        if (!UrlParameters.ContainsKey(Routing.ProviderId)) return;  // route complete?
 
-        if (UrlParameters.ContainsKey(Routing.ProviderId)) {
-
-            if (UrlParameters[Routing.ProviderId] == Routing.Actions.Add) {
+        if (UrlParameters[Routing.ProviderId] == Routing.Actions.Add) {
                 
-                var url = this.ComposeUrl(
-                   basePath: PageState.Page.Path,
-                   moduleId: ModuleState.ModuleId,
-                   action: "Add",
-                   0);
+            var url = this.ComposeUrl(
+                basePath: PageState.Page.Path,
+                moduleId: ModuleState.ModuleId,
+                action: "Add",
+                0);
 
-                NavigationManager.NavigateTo(url);
-            }
-
-            _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
-
-            (_model, var code) = await ProviderService.GetProviderAsync(_providerId);
-            if (!IsSuccessStatusCode(code))
-            {
-                throw new HttpRequestException($"Error loading Providers. Code: {code}");
-            }
-
-            IsLoaded = true;
+            NavigationManager.NavigateTo(url);
+            return;
         }
+
+        _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
+
+        (_model, var code) = await ProviderService.GetProviderAsync(_providerId);
+        if (!IsSuccessStatusCode(code))
+        {
+            throw new HttpRequestException($"Error loading Providers. Code: {code}");
+        }
+
+        IsLoaded = true;
     }
 
     private void Back() { 
@@ -100,34 +99,30 @@ public partial class Index : ModuleBase
 
     private async Task Delete()
     {
-        var parameters = new DialogParameters<DialogConfirm>
-        {
-            { x => x.ContentText, $"Do you really want to delete {_model.Name}? This cannot be undone." },
-            { x => x.ButtonText, "Delete" },
-        };
+        var options = new DialogOptions { CloseOnEscapeKey = true, };
+        // confirm delete using MudBlazor Dialog
+        var confirm = await DialogService.ShowMessageBox("Delete?",
+            $"Delete Provider {_model.Name}?",
+            "Yes", cancelText: "No", options: options);
 
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = await DialogService.ShowAsync<DialogConfirm>($"Delete Provider?", parameters, options);
-        var result = await dialog.Result;
+        if (!confirm.HasValue || !confirm.Value) return;
 
-        if (!result.Canceled)
+        try
         {
-            try
+            var code = await ProviderService.DeleteProviderAsync(_model.ProviderId);
+            if (code is not HttpStatusCode.OK)
             {
-                var code = await ProviderService.DeleteProviderAsync(_model.ProviderId);
-                if (code is not HttpStatusCode.OK)
-                {
-                    throw new HttpRequestException($"Error Deleting {_model}. Code: {code}");
-                }
-                await logger.LogInformation("LittleHelpBook Deleted {_item}", _model);
-                NavigationManager.NavigateTo(Routing.ProviderList);
+                throw new HttpRequestException($"Error Deleting {_model}. Code: {code}");
             }
-            catch (Exception ex)
-            {
-                await logger.LogError(ex, "Error Deleting LittleHelpBook {Error}", ex.Message);
-                AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
-            }
+            await logger.LogInformation("LittleHelpBook Deleted {_item}", _model);
+            NavigationManager.NavigateTo(Routing.ProviderList);
         }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting LittleHelpBook {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+     
     }
 
 

@@ -65,10 +65,12 @@ public partial class Index : ModuleBase
     {
         if (!ShouldRender()) return;
         if (!UrlParameters.ContainsKey(Routing.ProviderId)) return;  // route complete?
-
+        if (UrlParameters[Routing.ProviderId] == Routing.Actions.Add) return; // add new provider
+        
         try
         {
             _providerId = Int32.Parse(UrlParameters[Routing.ProviderId]);
+     
             (_list, var code) = await PhoneNumberService.GetPhoneNumbersAsync(_providerId);
             if (!IsSuccessStatusCode(code))
             {
