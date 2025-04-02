@@ -22,5 +22,8 @@ namespace OpenEugene.Module.LittleHelpBook.Client.Viewmodels
         public const string AddressTemplate = "/{providerId}/{addressId}";
         public const string AddressId = "addressId";
 
+        public class Actions { 
+            public const string Add = "Add";
+        }
     }
 }

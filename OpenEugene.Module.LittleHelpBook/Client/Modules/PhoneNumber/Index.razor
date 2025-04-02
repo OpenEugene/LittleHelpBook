@@ -4,8 +4,6 @@
 
 @if (_list != null)
 {
-    @if (_list.Any())
-    {
         <MudCard Outlined="true" >
             <MudCardHeader>
                 <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
@@ -38,14 +36,4 @@
                 </MudDataGrid>
             </MudCardContent>
         </MudCard>
-    }
-    else
-    {
-        <p><em>No phone numbers found.</em></p>
-        <AuthorizeView Roles="LhbRoles.Editors" Context="authCon" >
-            <Authorized>
-                <MudIconButton OnClick="@(m => Add())" Icon="@MudBlazor.Icons.Material.Filled.AddCircleOutline" aria-label="add" />
-            </Authorized>
-        </AuthorizeView>
-    }
 }

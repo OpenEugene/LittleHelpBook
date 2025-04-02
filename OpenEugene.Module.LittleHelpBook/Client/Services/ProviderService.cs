@@ -50,8 +50,9 @@ namespace OpenEugene.Module.LittleHelpBook.Services
 
         public async Task<(Models.Provider, HttpStatusCode)> AddProviderAsync(Models.Provider item)
         {
+            item.EnsureIAuditable();
             var url = $"{Apiurl}";
-            (var data, var response) = await PostJsonWithResponseAsync<Models.Provider>(url,item);
+            (var data, var response) = await PostJsonWithResponseAsync(url,item);
             return (data, response.StatusCode);        
         }
 

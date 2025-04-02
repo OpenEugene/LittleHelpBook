@@ -20,7 +20,7 @@
 
     private M.Address addr = new();
 
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; }
     [Parameter] public int Id { get; set; }
 
     private void Back()

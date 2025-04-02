@@ -11,6 +11,7 @@ using OpenEugene.Module.LittleHelpBook.ViewModels;
 using OpenEugene.Module.LittleHelpBook.Models;
 using OpenEugene.Module.LittleHelpBook.Repository;
 using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace OpenEugene.Module.LittleHelpBook.Controllers;
@@ -95,7 +96,7 @@ public class ProviderController : ModuleControllerBase
     // POST api/<controller>
     [HttpPost]
     [Authorize(Roles = RoleNames.Registered)]
-    public Provider Post([FromBody] Provider item)
+    public async Task<ActionResult<Models.Provider>> Post([FromBody] Models.Provider item)
     {
         if (ModelState.IsValid)
         {
@@ -166,23 +167,7 @@ public class ProviderController : ModuleControllerBase
         }
     }
 
-    // POST api/<controller>
-    [HttpPost]
-    public Address Post([FromBody] Address item)
-    {
-        if (ModelState.IsValid)
-        {
-            item = _LittleHelpBookRepository.AddAddress(item);
-            _logger.Log(LogLevel.Information, this, LogFunction.Create, "Address Added {item}", item);
-        }
-        else
-        {
-            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-            item = null;
-        }
-        return item;
-    } // POST api/<controller>
+  
     [HttpPost("ProviderAttribute")]
     public ProviderAttribute Post([FromBody] ProviderAttribute item)
     {

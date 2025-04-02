@@ -63,15 +63,15 @@ public partial class Index : ModuleBase
     protected override async Task OnParametersSetAsync()
     {
         if (!ShouldRender()) return;
+        if (!UrlParameters.ContainsKey(Routing.ProviderId)) return;  // route complete?
+        if (UrlParameters[Routing.ProviderId] == Routing.Actions.Add) return; // add new provider
 
-        if (UrlParameters.ContainsKey(Routing.ProviderId)) {
+        _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
 
-            _providerId = int.Parse(UrlParameters[Routing.ProviderId]);
+        await GetAttributes();
 
-            await GetAttributes();
-
-            IsLoaded = true;
-        }
+        IsLoaded = true;
+        
     }
 
     private async Task GetAttributes()

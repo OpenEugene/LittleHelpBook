@@ -1,0 +1,32 @@
+﻿@namespace OpenEugene.Module.Client.Controls
+<MudDialog>
+    <TitleContent>
+       @Title
+    </TitleContent>
+    <DialogContent>
+        <MudText>@ContentText</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string ContentText { get; set; } = "Are you sure you want to continue?";
+
+    [Parameter]
+    public string Title { get; set; } = "Are You Sure?";
+
+    [Parameter]
+    public string ButtonText { get; set; } = "OK";
+
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+}

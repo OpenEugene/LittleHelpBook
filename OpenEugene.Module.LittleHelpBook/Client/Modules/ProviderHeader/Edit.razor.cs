@@ -16,6 +16,9 @@ using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 
 using OpenEugene.Module.LittleHelpBook.Services;
 using OpenEugene.Module.LittleHelpBook.Client.Viewmodels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static MudBlazor.CategoryTypes;
+using OpenEugene.Module.Client.Controls;
 
 
 namespace OpenEugene.Module.ProviderHeader
@@ -26,6 +29,7 @@ namespace OpenEugene.Module.ProviderHeader
         [Inject] public NavigationManager NavigationManager { get; set; }
 		[Inject] public IStringLocalizer<Edit> Localizer { get; set; }		
         [Inject] public ISettingService SettingService { get; set; }
+        [Inject] IDialogService DialogService { get; set; }
 
 
         private MudForm mudform;
@@ -77,6 +81,9 @@ namespace OpenEugene.Module.ProviderHeader
                         throw new HttpRequestException($"Error loading Address. Code: {code}");
                     }
                 }
+                else {
+                    _item = new M.Provider();
+                }
                 IsLoaded = true;
             }
             catch (Exception ex)
@@ -95,15 +102,19 @@ namespace OpenEugene.Module.ProviderHeader
 				
                 if (mudform.IsValid)
                 {
-
                     if (PageState.Action == "Add")
                     {
-                        (_item, var code) = await ProviderService.AddProviderAsync(_item);
+                        (var newItem, var code) = await ProviderService.AddProviderAsync(_item);
                         if (code is not HttpStatusCode.OK)
                         {
                             throw new HttpRequestException($"Error Adding {_item}. Code: {code}");
                         }
                         await logger.LogInformation("LittleHelpBook Added {_item}", _item);
+                        
+                        var parms = AddUrlParameters(newItem.ProviderId);
+                        var url = NavigateUrl(Routing.ProviderRoute, parms);
+          
+                        NavigationManager.NavigateTo(url);
                     }
                     else
                     {
@@ -113,10 +124,9 @@ namespace OpenEugene.Module.ProviderHeader
                             throw new HttpRequestException($"Error Updating {_item}. Code: {_item}");
                         }
                         await logger.LogInformation("LittleHelpBook Updated {_item}", _item);
+
+                        NavigationManager.NavigateTo(PageState.ReturnUrl);
                     }
-
-                    NavigationManager.NavigateTo(PageState.ReturnUrl);
-
                 }
                 else
                 {

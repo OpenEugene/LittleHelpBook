@@ -21,6 +21,7 @@ using OpenEugene.Module.LittleHelpBook.Client.Extensions;
 using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using Oqtane.Modules.Controls;
+using static MudBlazor.CategoryTypes;
 
 namespace OpenEugene.Module.ProviderSearch;
 
@@ -168,7 +169,8 @@ public partial class Index : ModuleBase
 
     private void Add()
     {
-        var url = EditUrl("Add");
+        var parms = AddUrlParameters(Routing.Actions.Add);
+        var url = NavigateUrl(Routing.ProviderRoute, parms);
         NavigationManager.NavigateTo(url);
     }
 
