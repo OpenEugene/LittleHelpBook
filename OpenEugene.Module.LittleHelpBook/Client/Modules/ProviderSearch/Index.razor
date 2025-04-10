@@ -33,7 +33,9 @@
        
                 }
                 <MudSpacer/>
-                <MudIconButton Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
+                <AuthorizeView Roles="@($"{LhbRoleNames.Editors},{@RoleNames.Host}")" >
+                    <MudIconButton Icon="@MudBlazor.Icons.Material.Filled.AddCard" Color="Color.Default" OnClick="Add" />
+                </AuthorizeView>
             </MudStack>
         </ToolBarContent>
         <Columns>
