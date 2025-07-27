@@ -1,6 +1,6 @@
-[submodule "oqtane.framework"]
+	[submodule "oqtane.framework"]
 	path = oqtane.framework
 	url = https://github.com/OpenEugene/oqtane.framework
-	branch = release/v6.0.1
+	branch = release/v6.1.3
 	ignore = all
 	

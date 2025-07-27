@@ -24,9 +24,17 @@
             </MudField>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Color="Color.Primary"  OnClick="Edit">@Localizer["Edit"]</MudButton>
-            <MudButton Color="Color.Secondary"  OnClick="Back">@Localizer["Back"]</MudButton>
-            <MudIconButton Color="Color.Tertiary" OnClick="Delete" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
+            <AuthorizeView Roles="Editors">
+                <Authorized>
+                    <MudButton Color="Color.Primary" OnClick="Edit">@Localizer["Edit"]</MudButton>
+                </Authorized>
+            </AuthorizeView>
+            <MudButton Color="Color.Secondary" OnClick="Back">@Localizer["Back"]</MudButton>
+            <AuthorizeView Roles="Editors">
+                <Authorized>
+                    <MudIconButton Color="Color.Tertiary" OnClick="Delete" Icon="@MudBlazor.Icons.Material.Filled.Delete" aria-label="delete" />
+                </Authorized>
+            </AuthorizeView>
         </MudCardActions>
     </MudCard>
 
